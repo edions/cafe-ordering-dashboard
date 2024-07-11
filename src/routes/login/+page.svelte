@@ -9,7 +9,7 @@
 	<Card.Root class="w-full max-w-sm">
 		<Card.Header>
 			<Card.Title class="text-2xl">Login</Card.Title>
-			<Card.Description>Enter your email below to login to your account.</Card.Description>
+			<Card.Description>Enter your email below to login.</Card.Description>
 		</Card.Header>
 		<Card.Content class="grid gap-4">
 			<div class="grid gap-2">
