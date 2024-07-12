@@ -37,14 +37,16 @@
 						<DropdownMenu.CheckboxItem>Archived</DropdownMenu.CheckboxItem>
 					</DropdownMenu.Content>
 				</DropdownMenu.Root>
-				<Button size="sm" variant="outline" class="h-8 gap-1">
+				<!-- <Button size="sm" variant="outline" class="h-8 gap-1">
 					<File class="h-3.5 w-3.5" />
 					<span class="sr-only sm:not-sr-only sm:whitespace-nowrap"> Export </span>
-				</Button>
-				<Button size="sm" class="h-8 gap-1">
-					<CirclePlus class="h-3.5 w-3.5" />
-					<span class="sr-only sm:not-sr-only sm:whitespace-nowrap"> Add Product </span>
-				</Button>
+				</Button> -->
+				<a href="products/add">
+                    <Button size="sm" class="h-8 gap-1">
+                        <CirclePlus class="h-3.5 w-3.5" />
+                        <span class="sr-only sm:not-sr-only sm:whitespace-nowrap"> Add Product </span>
+                    </Button>
+                </a>
 			</div>
 		</div>
 		<Tabs.Content value="all">
