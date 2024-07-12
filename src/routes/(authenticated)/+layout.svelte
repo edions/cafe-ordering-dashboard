@@ -24,10 +24,10 @@
 					<Package2 class="h-6 w-6" />
 					<span class="">Cafe</span>
 				</a>
-				<Button variant="outline" size="icon" class="ml-auto h-8 w-8">
+				<!-- <Button variant="outline" size="icon" class="ml-auto h-8 w-8">
 					<Bell class="h-4 w-4" />
 					<span class="sr-only">Toggle notifications</span>
-				</Button>
+				</Button> -->
 			</div>
 			<div class="flex-1">
 				<nav class="grid items-start px-2 text-sm font-medium lg:px-4">
@@ -35,31 +35,31 @@
 						href="dashboard"
 						class="flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary"
 					>
-						<Home class="h-4 w-4" />
+						<Home class="h-6 w-6" />
 						Dashboard
+					</a>
+                    <a
+						href="products"
+						class="flex items-center gap-3 rounded-lg bg-muted px-3 py-2 text-primary transition-all hover:text-primary"
+					>
+						<Package class="h-6 w-6" />
+						Products
 					</a>
 					<a
 						href="orders"
 						class="flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary"
 					>
-						<ShoppingCart class="h-4 w-4" />
+						<ShoppingCart class="h-6 w-6" />
 						Orders
 						<Badge class="ml-auto flex h-6 w-6 shrink-0 items-center justify-center rounded-full">
 							6
 						</Badge>
 					</a>
 					<a
-						href="products"
-						class="flex items-center gap-3 rounded-lg bg-muted px-3 py-2 text-primary transition-all hover:text-primary"
-					>
-						<Package class="h-4 w-4" />
-						Products
-					</a>
-					<a
 						href="##"
 						class="flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary"
 					>
-						<Users class="h-4 w-4" />
+						<Users class="h-6 w-6" />
 						Customers
 					</a>
 				</nav>
@@ -116,7 +116,7 @@
 				</Sheet.Content>
 			</Sheet.Root>
 			<div class="w-full flex-1">
-				<form>
+				<!-- <form>
 					<div class="relative">
 						<Search class="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
 						<Input
@@ -125,7 +125,7 @@
 							class="w-full appearance-none bg-background pl-8 shadow-none md:w-2/3 lg:w-1/3"
 						/>
 					</div>
-				</form>
+				</form> -->
 			</div>
 			<DropdownMenu.Root>
 				<DropdownMenu.Trigger asChild let:builder>
@@ -138,8 +138,8 @@
 					<DropdownMenu.Label>My Account</DropdownMenu.Label>
 					<DropdownMenu.Separator />
 					<DropdownMenu.Item>Settings</DropdownMenu.Item>
-					<DropdownMenu.Item>Support</DropdownMenu.Item>
-					<DropdownMenu.Separator />
+					<!-- <DropdownMenu.Item>Support</DropdownMenu.Item> -->
+					<!-- <DropdownMenu.Separator /> -->
 					<DropdownMenu.Item>Logout</DropdownMenu.Item>
 				</DropdownMenu.Content>
 			</DropdownMenu.Root>
