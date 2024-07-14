@@ -3,16 +3,13 @@
 	import Package from 'lucide-svelte/icons/package';
 	import Home from 'lucide-svelte/icons/house';
 	import ShoppingCart from 'lucide-svelte/icons/shopping-cart';
-	import Bell from 'lucide-svelte/icons/bell';
 	import Menu from 'lucide-svelte/icons/menu';
 	import Package2 from 'lucide-svelte/icons/package-2';
-	import Search from 'lucide-svelte/icons/search';
 	import Users from 'lucide-svelte/icons/users';
 
 	import { Badge } from '$lib/components/ui/badge/index.js';
 	import { Button } from '$lib/components/ui/button/index.js';
 	import * as DropdownMenu from '$lib/components/ui/dropdown-menu/index.js';
-	import { Input } from '$lib/components/ui/input/index.js';
 	import * as Sheet from '$lib/components/ui/sheet/index.js';
 </script>
 
@@ -24,10 +21,6 @@
 					<Package2 class="h-6 w-6" />
 					<span class="">Cafe</span>
 				</a>
-				<!-- <Button variant="outline" size="icon" class="ml-auto h-8 w-8">
-					<Bell class="h-4 w-4" />
-					<span class="sr-only">Toggle notifications</span>
-				</Button> -->
 			</div>
 			<div class="flex-1">
 				<nav class="grid items-start px-2 text-sm font-medium lg:px-4">
@@ -145,6 +138,8 @@
 				</DropdownMenu.Content>
 			</DropdownMenu.Root>
 		</header>
-		<slot/>
+		<div class="overflow-auto">
+            <slot/>
+        </div>
 	</div>
 </div>

@@ -18,7 +18,7 @@
 			</div>
 			<div class="grid gap-2">
 				<Label for="password">Password</Label>
-				<Input id="password" type="password" required />
+				<Input id="password" type="password" placeholder="Password" required />
 			</div>
 		</Card.Content>
 		<Card.Footer>
