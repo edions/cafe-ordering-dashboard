@@ -1,4 +1,6 @@
 <script lang="ts">
+	import { page } from "$app/stores";
+
 	import CircleUser from 'lucide-svelte/icons/circle-user';
 	import Package from 'lucide-svelte/icons/package';
 	import Home from 'lucide-svelte/icons/house';
@@ -25,22 +27,28 @@
 			<div class="flex-1">
 				<nav class="grid items-start px-2 text-sm font-medium lg:px-4">
 					<a
-						href="dashboard"
-						class="flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary"
+						href="/dashboard"
+						class={`
+							${$page.route.id?.includes("dashboard") ? 'text-primary bg-muted' : ''}
+							flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary`}
 					>
 						<Home class="h-6 w-6" />
 						Dashboard
 					</a>
                     <a
-						href="products"
-						class="flex items-center gap-3 rounded-lg bg-muted px-3 py-2 text-primary transition-all hover:text-primary"
+						href="/products"
+						class={`
+							${$page.route.id?.includes("products") ? 'text-primary bg-muted' : ''}
+							flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary`}
 					>
 						<Package class="h-6 w-6" />
 						Products
 					</a>
 					<a
-						href="orders"
-						class="flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary"
+						href="/orders"
+						class={`
+							${$page.route.id?.includes("orders") ? 'text-primary bg-muted' : ''}
+							flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary`}
 					>
 						<ShoppingCart class="h-6 w-6" />
 						Orders
@@ -76,7 +84,7 @@
 							<span class="sr-only">Cafe</span>
 						</a>
 						<a
-							href="##"
+							href="dashboard"
 							class="mx-[-0.65rem] flex items-center gap-4 rounded-xl px-3 py-2 text-muted-foreground hover:text-foreground"
 						>
 							<Home class="h-5 w-5" />
