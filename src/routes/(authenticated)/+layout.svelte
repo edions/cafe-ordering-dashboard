@@ -13,6 +13,15 @@
 	import { Button } from '$lib/components/ui/button/index.js';
 	import * as DropdownMenu from '$lib/components/ui/dropdown-menu/index.js';
 	import * as Sheet from '$lib/components/ui/sheet/index.js';
+	
+	import { signOut } from "firebase/auth";
+	import { auth } from "$lib/firebase";
+	import { goto } from "$app/navigation";
+
+	async function logout() {
+		await signOut(auth)
+		goto("login");
+	}
 </script>
 
 <div class="grid min-h-screen w-full md:grid-cols-[220px_1fr] lg:grid-cols-[280px_1fr]">
@@ -142,7 +151,7 @@
 					<DropdownMenu.Item>Settings</DropdownMenu.Item>
 					<!-- <DropdownMenu.Item>Support</DropdownMenu.Item> -->
 					<!-- <DropdownMenu.Separator /> -->
-					<DropdownMenu.Item>Logout</DropdownMenu.Item>
+					<DropdownMenu.Item on:click={logout}>Logout</DropdownMenu.Item>
 				</DropdownMenu.Content>
 			</DropdownMenu.Root>
 		</header>
