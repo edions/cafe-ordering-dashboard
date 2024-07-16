@@ -1,6 +1,5 @@
 <script lang="ts">
 	import ChevronLeft from 'lucide-svelte/icons/chevron-left';
-
 	import { Badge } from '$lib/components/ui/badge/index.js';
 	import { Button } from '$lib/components/ui/button/index.js';
 	import * as Card from '$lib/components/ui/card/index.js';
@@ -13,13 +12,13 @@
 <main class="grid flex-1 items-start gap-4 p-4 sm:px-6 sm:py-0 md:gap-8 lg:pt-6">
 	<div class="mx-auto grid max-w-[59rem] flex-1 auto-rows-max gap-4">
 		<div class="flex items-center gap-4">
-			<Button variant="outline" size="icon" class="h-7 w-7">
+			<!-- <Button variant="outline" size="icon" class="h-7 w-7">
 				<ChevronLeft class="h-4 w-4" />
 				<span class="sr-only">Back</span>
 			</Button>
 			<h1 class="flex-1 shrink-0 whitespace-nowrap text-xl font-semibold tracking-tight sm:grow-0">
 				Pro Controller
-			</h1>
+			</h1> -->
 			<Badge variant="outline" class="ml-auto sm:ml-0">In stock</Badge>
 			<div class="hidden items-center gap-2 md:ml-auto md:flex">
 				<a href="../products">
