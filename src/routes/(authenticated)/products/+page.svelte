@@ -1,56 +1,32 @@
 <script lang="ts">
-	import ListFilter from 'lucide-svelte/icons/list-filter';
-	import CirclePlus from 'lucide-svelte/icons/circle-plus';
-
-	import { Button } from '$lib/components/ui/button/index.js';
-	import * as DropdownMenu from '$lib/components/ui/dropdown-menu/index.js';
 	import * as Tabs from '$lib/components/ui/tabs/index.js';
 	import Product from '$lib/components/Product.svelte';
 	import Category from '$lib/components/Category.svelte';
+	import { Label } from '$lib/components/ui/label/index.js';
 </script>
 
 <main class="grid flex-1 items-start gap-4 p-4 sm:px-6 sm:py-0 md:gap-8 lg:p-6">
 	<Tabs.Root value="product">
 		<div class="flex items-center">
-			<Tabs.List>
-				<Tabs.Trigger value="product">Product</Tabs.Trigger>
-				<Tabs.Trigger value="category">Category</Tabs.Trigger>
-				<!-- <Tabs.Trigger value="draft">Draft</Tabs.Trigger>
-				<Tabs.Trigger value="archived" class="hidden sm:flex">Archived</Tabs.Trigger> -->
-			</Tabs.List>
+			<h2
+				class="mt-10 scroll-m-20 pb-2 text-3xl font-semibold tracking-tight transition-colors first:mt-0"
+			>
+				Products
+			</h2>
 			<div class="ml-auto flex items-center gap-2">
-				<DropdownMenu.Root>
-					<DropdownMenu.Trigger asChild let:builder>
-						<Button builders={[builder]} variant="outline" size="sm" class="h-8 gap-1">
-							<ListFilter class="h-3.5 w-3.5" />
-							<span class="sr-only sm:not-sr-only sm:whitespace-nowrap"> Filter </span>
-						</Button>
-					</DropdownMenu.Trigger>
-					<DropdownMenu.Content align="end">
-						<DropdownMenu.Label>Filter by</DropdownMenu.Label>
-						<DropdownMenu.Separator />
-						<DropdownMenu.CheckboxItem checked>Active</DropdownMenu.CheckboxItem>
-						<DropdownMenu.CheckboxItem>Draft</DropdownMenu.CheckboxItem>
-						<DropdownMenu.CheckboxItem>Archived</DropdownMenu.CheckboxItem>
-					</DropdownMenu.Content>
-				</DropdownMenu.Root>
-				<!-- <Button size="sm" variant="outline" class="h-8 gap-1">
-					<File class="h-3.5 w-3.5" />
-					<span class="sr-only sm:not-sr-only sm:whitespace-nowrap"> Export </span>
-				</Button> -->
-				<a href="products/add">
-                    <Button size="sm" class="h-8 gap-1">
-                        <CirclePlus class="h-3.5 w-3.5" />
-                        <span class="sr-only sm:not-sr-only sm:whitespace-nowrap"> Add Product </span>
-                    </Button>
-                </a>
+				<Tabs.List>
+					<Tabs.Trigger value="product">Product</Tabs.Trigger>
+					<Tabs.Trigger value="category">Category</Tabs.Trigger>
+					<!-- <Tabs.Trigger value="draft">Draft</Tabs.Trigger>
+					<Tabs.Trigger value="archived" class="hidden sm:flex">Archived</Tabs.Trigger> -->
+				</Tabs.List>
 			</div>
 		</div>
 		<Tabs.Content value="product">
-			<Product/>
+			<Product />
 		</Tabs.Content>
 		<Tabs.Content value="category">
-			<Category/>
+			<Category />
 		</Tabs.Content>
 	</Tabs.Root>
 </main>
