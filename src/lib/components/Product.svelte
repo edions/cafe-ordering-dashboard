@@ -12,7 +12,7 @@
 	import { Input } from '$lib/components/ui/input/index.js';
 </script>
 
-<Card.Root>
+<Card.Root class="flex flex-col max-h-[75vh]">
 	<Card.Header>
 		<!-- <Card.Title>Products</Card.Title>
         <Card.Description>
@@ -56,7 +56,7 @@
 			</div>
 		</div>
 	</Card.Header>
-	<Card.Content>
+	<Card.Content class="flex-1 overflow-y-auto">
 		<Table.Root>
 			<Table.Header>
 				<Table.Row>

@@ -155,8 +155,6 @@
 				</DropdownMenu.Content>
 			</DropdownMenu.Root>
 		</header>
-		<div class="overflow-auto">
-            <slot/>
-        </div>
+        <slot/>
 	</div>
 </div>

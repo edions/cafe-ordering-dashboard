@@ -12,7 +12,7 @@
 	import * as Table from '$lib/components/ui/table/index.js';
 </script>
 
-<main class="flex flex-1 flex-col gap-4 p-4 md:gap-8 md:p-8">
+<main class="flex flex-1 flex-col gap-4 p-4 md:gap-8 md:p-8 max-h-[90vh] overflow-y-auto">
 	<div class="grid gap-4 md:grid-cols-2 md:gap-8 lg:grid-cols-4">
 		<Card.Root
 			data-x-chunk-name="dashboard-01-chunk-0"
@@ -69,7 +69,7 @@
 	</div>
 	<div class="grid gap-4 md:gap-8 lg:grid-cols-2 xl:grid-cols-3">
 		<Card.Root
-			class="xl:col-span-2"
+			class="xl:col-span-2 max-h-[55vh] flex flex-col"
 			data-x-chunk-name="dashboard-01-chunk-4"
 			data-x-chunk-description="A card showing a table of recent transactions with a link to view all transactions."
 		>
@@ -83,7 +83,7 @@
 					<ArrowUpRight class="h-4 w-4" />
 				</Button>
 			</Card.Header>
-			<Card.Content>
+			<Card.Content class="flex-1 overflow-y-auto">
 				<Table.Root>
 					<Table.Header>
 						<Table.Row>
@@ -170,13 +170,14 @@
 			</Card.Content>
 		</Card.Root>
 		<Card.Root
+			class="max-h-[55vh] flex flex-col"
 			data-x-chunk-name="dashboard-01-chunk-5"
 			data-x-chunk-description="A card showing a list of recent sales with customer names and email addresses."
 		>
 			<Card.Header>
 				<Card.Title>Recent Sales</Card.Title>
 			</Card.Header>
-			<Card.Content class="grid gap-8">
+			<Card.Content class="flex-1 overflow-y-auto grid gap-8">
 				<div class="flex items-center gap-4">
 					<Avatar.Root class="hidden h-9 w-9 sm:flex">
 						<Avatar.Image src="/avatars/01.png" alt="Avatar" />

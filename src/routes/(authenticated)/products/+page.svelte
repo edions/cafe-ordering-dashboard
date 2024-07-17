@@ -8,11 +8,7 @@
 <main class="grid flex-1 items-start gap-4 p-4 sm:px-6 sm:py-0 md:gap-8 lg:p-6">
 	<Tabs.Root value="product">
 		<div class="flex items-center">
-			<h2
-				class="mt-10 scroll-m-20 pb-2 text-3xl font-semibold tracking-tight transition-colors first:mt-0"
-			>
-				Products
-			</h2>
+			<h3 class="scroll-m-20 text-2xl font-semibold tracking-tight">Products</h3>
 			<div class="ml-auto flex items-center gap-2">
 				<Tabs.List>
 					<Tabs.Trigger value="product">Product</Tabs.Trigger>

@@ -84,7 +84,7 @@
 >
 	<Card.Header class="flex flex-row items-center">
 		<div class="grid gap-2">
-			<Card.Title>Categroies</Card.Title>
+			<Card.Title>Categories</Card.Title>
 			<Card.Description>Recent transactions from your store.</Card.Description>
 		</div>
 		<Button on:click={openAddCat} size="sm" class="ml-auto gap-1">
@@ -92,7 +92,7 @@
 			<span class="sr-only sm:not-sr-only sm:whitespace-nowrap"> Add Product </span>
 		</Button>
 	</Card.Header>
-	<Card.Content>
+	<Card.Content class="max-h-[60vh] overflow-y-auto">
 		<Table.Root>
 			<Table.Header>
 				<Table.Row>
