@@ -7,10 +7,11 @@
 	import { Label } from '$lib/components/ui/label/index.js';
 	import * as Select from '$lib/components/ui/select/index.js';
 	import { Textarea } from '$lib/components/ui/textarea/index.js';
-	import { collection, getDocs, addDoc, serverTimestamp } from 'firebase/firestore';
+	import { collection, doc, getDocs, addDoc, updateDoc, serverTimestamp, getDoc } from 'firebase/firestore';
 	import { db } from '$lib/firebase';
 	import { onMount } from 'svelte';
 	import { goto } from '$app/navigation';
+	import { page } from '$app/stores'
 
 	let catList:any[] = []
 
@@ -23,11 +24,20 @@
 
 	let saving = false;
 
-	let selected = { value: "", label: "" };
+	let slug = $page.params.slug;
 
 	onMount(async () => {
+		getCurProduct();
 		getCategory();
 	});
+
+	const saveProduct = async () => {
+		if(slug !== "add") {
+			editProduct();
+		} else {
+			addProduct();
+		}
+	}
 
 	const addProduct = async () => {
 		saving = true;
@@ -44,6 +54,36 @@
 		goto('/products');
 	};
 
+	const editProduct = async () => {
+		saving = true;
+		const ref = doc(db, 'product2', slug);
+		await updateDoc(ref, {
+			productName,
+			productDescription,
+			stock,
+			price,
+			category: category.value,
+			status: status.value,
+		});
+		goto('/products');
+	};
+
+	const getCurProduct = async () => {
+		const ref = doc(db, 'product2',  slug);
+		const snapshot = await getDoc(ref);
+		
+		if(snapshot.exists()) {
+			productName = snapshot.get("productName");
+			productDescription = snapshot.get("productDescription");
+			stock = snapshot.get("stock");
+			price = snapshot.get("price");
+			category = {value: snapshot.get("category"), label: snapshot.get("category")};
+			status = {value: snapshot.get("status"), label: snapshot.get("status")}
+		} else {
+			console.log("Product not found!");
+		}
+	}
+
 	const getCategory = async () => {
 		const ref = collection(db, 'category');
 		const snapshot = await getDocs(ref);
@@ -58,16 +98,16 @@
 			<!-- <Button variant="outline" size="icon" class="h-7 w-7">
 				<ChevronLeft class="h-4 w-4" />
 				<span class="sr-only">Back</span>
-			</Button>
+			</Button> -->
 			<h1 class="flex-1 shrink-0 whitespace-nowrap text-xl font-semibold tracking-tight sm:grow-0">
-				Pro Controller
-			</h1> -->
+				{productName}
+			</h1>
 			<Badge variant="outline" class="ml-auto sm:ml-0">In stock</Badge>
 			<div class="hidden items-center gap-2 md:ml-auto md:flex">
 				<a href="../products">
 					<Button variant="outline" size="sm">Discard</Button>
 				</a>
-				<Button size="sm" on:click={addProduct} disabled={saving}>
+				<Button size="sm" on:click={saveProduct} disabled={saving}>
 					{#if saving}
 					Saving
 					{:else}
@@ -136,6 +176,7 @@
 							<Card.Content>
 								<Label for="category">Category</Label>
 								<Select.Root
+									selected={category}
 									onSelectedChange={(v) => {
 										v && (category = v.value);
 									}}
@@ -168,7 +209,7 @@
 							<div class="grid gap-3">
 								<Label for="status">Status</Label>
 								<Select.Root
-									bind:selected
+									selected={status}
 									onSelectedChange={(v) => {
 										v && (status = v.value);
 									}}

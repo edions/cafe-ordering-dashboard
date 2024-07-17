@@ -14,6 +14,7 @@
 	import { db } from '$lib/firebase';
 	import { addDoc, collection, deleteDoc, doc, getDocs } from 'firebase/firestore';
 	import { onMount } from 'svelte';
+	import { goto } from '$app/navigation';
 
 	let productList: any[] = [];
 
@@ -25,6 +26,10 @@
 		const ref = collection(db, 'product2');
 		const snapshot = await getDocs(ref);
 		productList = snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
+	};
+
+	const handleUpProduct = async (id: string) => {
+		goto('products/'+id)
 	};
 
 	const delProduct = async (id: string) => {
@@ -124,7 +129,7 @@
 								</DropdownMenu.Trigger>
 								<DropdownMenu.Content align="end">
 									<DropdownMenu.Label>Actions</DropdownMenu.Label>
-									<DropdownMenu.Item>Edit</DropdownMenu.Item>
+									<DropdownMenu.Item on:click={() => handleUpProduct(prod.id)}>Edit</DropdownMenu.Item>
 									<DropdownMenu.Item on:click={() => delProduct(prod.id)}>Delete</DropdownMenu.Item>
 								</DropdownMenu.Content>
 							</DropdownMenu.Root>
