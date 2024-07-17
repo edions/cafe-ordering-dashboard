@@ -2,7 +2,7 @@
 	import { onMount } from 'svelte';
 	import { goto } from '$app/navigation';
 	import { getAuth, onAuthStateChanged } from 'firebase/auth';
-	import { auth } from '$lib/firebase';
+	import { auth } from '$lib/firebase/firebase';
 
 	let authenticated = false;
 

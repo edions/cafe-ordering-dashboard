@@ -15,7 +15,7 @@
 	import * as Sheet from '$lib/components/ui/sheet/index.js';
 	
 	import { signOut } from "firebase/auth";
-	import { auth } from "$lib/firebase";
+	import { auth } from "$lib/firebase/firebase";
 	import { goto } from "$app/navigation";
 
 	async function logout() {

@@ -11,7 +11,7 @@
 	import Search from 'lucide-svelte/icons/search';
 	import { Input } from '$lib/components/ui/input/index.js';
 
-	import { db } from '$lib/firebase';
+	import { db } from '$lib/firebase/firebase';
 	import { addDoc, collection, deleteDoc, doc, getDocs } from 'firebase/firestore';
 	import { onMount } from 'svelte';
 	import { goto } from '$app/navigation';
@@ -46,7 +46,7 @@
             Manage your products and view their sales performance.
         </Card.Description> -->
 		<div class="flex items-center">
-			<div class="relative">
+			<div class="relative basis-6/12">
 				<Search class="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
 				<Input
 					type="search"
@@ -92,8 +92,9 @@
 					</Table.Head>
 					<Table.Head>Name</Table.Head>
 					<Table.Head>Status</Table.Head>
+					<Table.Head>Stock</Table.Head>
 					<Table.Head class="hidden md:table-cell">Price</Table.Head>
-					<Table.Head class="hidden md:table-cell">Stock</Table.Head>
+					<Table.Head class="hidden md:table-cell">Category</Table.Head>
 					<Table.Head class="hidden md:table-cell">Created at</Table.Head>
 					<Table.Head>
 						<span class="sr-only">Actions</span>
@@ -108,7 +109,7 @@
 								alt="Product example"
 								class="aspect-square rounded-md object-cover"
 								height="64"
-								src="/images/placeholder.svg"
+								src={prod.imageUrl}
 								width="64"
 							/>
 						</Table.Cell>
@@ -116,8 +117,9 @@
 						<Table.Cell>
 							<Badge variant="outline">{prod.status}</Badge>
 						</Table.Cell>
+						<Table.Cell class="font-medium">{prod.stock}</Table.Cell>
 						<Table.Cell class="hidden md:table-cell">${prod.price}</Table.Cell>
-						<Table.Cell class="hidden md:table-cell">{prod.stock}</Table.Cell>
+						<Table.Cell class="hidden md:table-cell">{prod.category}</Table.Cell>
 						<Table.Cell class="hidden md:table-cell">{prod.createdAt?.toDate()?.toDateString()}</Table.Cell>
 						<Table.Cell>
 							<DropdownMenu.Root>

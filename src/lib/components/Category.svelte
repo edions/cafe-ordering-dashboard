@@ -5,7 +5,7 @@
 	import { Label } from '$lib/components/ui/label/index.js';
 	import * as Card from '$lib/components/ui/card/index.js';
 	import * as Table from '$lib/components/ui/table/index.js';
-	import { db } from '$lib/firebase';
+	import { db } from '$lib/firebase/firebase';
 	import { addDoc, collection, deleteDoc, doc, getDocs } from 'firebase/firestore';
 	import { onMount } from 'svelte';
 	import CirclePlus from 'lucide-svelte/icons/circle-plus';
@@ -59,7 +59,7 @@
 	<!-- <Dialog.Trigger class={buttonVariants({ variant: 'outline' })}>Edit Profile</Dialog.Trigger> -->
 	<Dialog.Content class="sm:max-w-[425px]">
 		<Dialog.Header>
-			<Dialog.Title>Edit profile</Dialog.Title>
+			<Dialog.Title>Edit category</Dialog.Title>
 			<Dialog.Description>
 				Make changes to your profile here. Click save when you're done.
 			</Dialog.Description>
