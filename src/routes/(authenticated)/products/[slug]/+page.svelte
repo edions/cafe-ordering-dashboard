@@ -1,5 +1,6 @@
 <script lang="ts">
 	import Image from 'lucide-svelte/icons/image';
+	import LoaderCircle from 'lucide-svelte/icons/loader-circle';
 	import { Badge } from '$lib/components/ui/badge/index.js';
 	import { Button } from '$lib/components/ui/button/index.js';
 	import * as Card from '$lib/components/ui/card/index.js';
@@ -25,8 +26,8 @@
 
 	let catList: any[] = [];
 
-	let productName: string;
-	let productDescription: string;
+	let productName: string = '';
+	let productDescription: string = '';
 	let stock: number = 0;
 	let price: number = 0;
 	let category: any;
@@ -147,17 +148,15 @@
 				<span class="sr-only">Back</span>
 			</Button> -->
 			{#if slug !== 'add'}
-				<h1
-					class="flex-1 shrink-0 whitespace-nowrap text-xl font-semibold tracking-tight sm:grow-0">
-					{productName}
-				</h1>
-				<Badge variant="outline" class="ml-auto sm:ml-0">In stock</Badge>
+				<h1 class="flex-1 shrink-0 whitespace-nowrap text-xl font-semibold tracking-tight sm:grow-0">{productName}</h1>
+				<!-- <Badge variant="outline" class="ml-auto sm:ml-0">{status.value}</Badge> -->
 			{/if}
 			<div class="hidden items-center gap-2 md:ml-auto md:flex">
-				<Button variant="outline" size="sm" on:click={() => goto('/products')}>Discard</Button>
+				<Button variant="outline" size="sm" on:click={() => goto('/products')} disabled={saving}>Discard</Button>
 				<Button size="sm" on:click={saveProduct} disabled={saving}>
 					{#if saving}
-						Saving
+						<LoaderCircle class="mr-2 h-4 w-4 animate-spin" />
+						Please wait
 					{:else}
 						Save Product
 					{/if}
@@ -166,10 +165,7 @@
 		</div>
 		<div class="grid gap-4 md:grid-cols-[1fr_250px] lg:grid-cols-3 lg:gap-8">
 			<div class="grid auto-rows-max items-start gap-4 lg:col-span-2 lg:gap-8">
-				<Card.Root
-					data-x-chunk-name="dashboard-07-chunk-0"
-					data-x-chunk-description="A card with a form to edit the product details"
-				>
+				<Card.Root>
 					<Card.Header>
 						<Card.Title>Product Details</Card.Title>
 					</Card.Header>
@@ -177,21 +173,29 @@
 						<div class="grid gap-6">
 							<div class="grid gap-3">
 								<Label for="name">Name</Label>
-								<Input bind:value={productName} id="name" type="text" class="w-full" />
+								<Input
+									bind:value={productName}
+									id="name"
+									type="text"
+									class="w-full"
+									disabled={saving}
+								/>
 							</div>
 							<div class="grid gap-3">
 								<Label for="description">Description</Label>
-								<Textarea bind:value={productDescription} id="description" class="min-h-32" />
+								<Textarea
+									bind:value={productDescription}
+									id="description"
+									class="min-h-32"
+									disabled={saving}
+								/>
 							</div>
 						</div>
 					</Card.Content>
 				</Card.Root>
 				<div class="grid gap-4 sm:grid-cols-2">
 					<div class="grid gap-2">
-						<Card.Root
-							data-x-chunk-name="dashboard-07-chunk-1"
-							data-x-chunk-description="A card with a form to edit the product stock and variants"
-						>
+						<Card.Root>
 							<Card.Header>
 								<Card.Title>Stock</Card.Title>
 							</Card.Header>
@@ -199,27 +203,25 @@
 								<div class="grid gap-6 sm:grid-cols-2">
 									<div class="grid gap-3">
 										<Label for="stock-1">Stock</Label>
-										<Input bind:value={stock} id="stock-1" type="number" />
+										<Input bind:value={stock} id="stock-1" type="number" disabled={saving} />
 									</div>
 									<div class="grid gap-3">
 										<Label for="price-1">Price</Label>
-										<Input bind:value={price} id="price-1" type="number" />
+										<Input bind:value={price} id="price-1" type="number" disabled={saving} />
 									</div>
 								</div>
 							</Card.Content>
 						</Card.Root>
 					</div>
 					<div class="grid gap-2">
-						<Card.Root
-							data-x-chunk-name="dashboard-07-chunk-2"
-							data-x-chunk-description="A card with a form to edit the product category and subcategory"
-						>
+						<Card.Root>
 							<Card.Header>
 								<Card.Title>Product Category</Card.Title>
 							</Card.Header>
 							<Card.Content>
 								<Label for="category">Category</Label>
 								<Select.Root
+									disabled={saving}
 									selected={category}
 									onSelectedChange={(v) => {
 										v && (category = v.value);
@@ -242,10 +244,7 @@
 				</div>
 			</div>
 			<div class="grid auto-rows-max items-start gap-4 lg:gap-8">
-				<Card.Root
-					data-x-chunk-name="dashboard-07-chunk-3"
-					data-x-chunk-description="A card with a form to edit the product status"
-				>
+				<Card.Root>
 					<Card.Header>
 						<Card.Title>Product Status</Card.Title>
 					</Card.Header>
@@ -254,6 +253,7 @@
 							<div class="grid gap-3">
 								<Label for="status">Status</Label>
 								<Select.Root
+									disabled={saving}
 									selected={status}
 									onSelectedChange={(v) => {
 										v && (status = v.value);
@@ -272,11 +272,7 @@
 						</div>
 					</Card.Content>
 				</Card.Root>
-				<Card.Root
-					class="overflow-hidden"
-					data-x-chunk-name="dashboard-07-chunk-4"
-					data-x-chunk-description="A card with a form to upload product images"
-				>
+				<Card.Root class="overflow-hidden">
 					<Card.Header>
 						<Card.Title>Product Images</Card.Title>
 					</Card.Header>
@@ -308,10 +304,17 @@
 			</div>
 		</div>
 		<div class="flex items-center justify-center gap-2 md:hidden">
-			<a href="../products">
-				<Button variant="outline" size="sm">Discard</Button>
-			</a>
-			<Button size="sm">Save Product</Button>
+			<Button variant="outline" size="sm" on:click={() => goto('/products')} disabled={saving}
+				>Discard</Button
+			>
+			<Button size="sm" on:click={saveProduct} disabled={saving}>
+				{#if saving}
+					<LoaderCircle class="mr-2 h-4 w-4 animate-spin" />
+					Please wait
+				{:else}
+					Save Product
+				{/if}
+			</Button>
 		</div>
 	</div>
 </main>

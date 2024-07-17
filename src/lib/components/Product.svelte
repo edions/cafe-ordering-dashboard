@@ -1,14 +1,10 @@
 <script lang="ts">
-	import Ellipsis from 'lucide-svelte/icons/ellipsis';
-
+	import { Search, Ellipsis, ListFilter, CirclePlus } from '$lib/icons';
 	import { Badge } from '$lib/components/ui/badge/index.js';
 	import { Button } from '$lib/components/ui/button/index.js';
 	import * as Card from '$lib/components/ui/card/index.js';
 	import * as DropdownMenu from '$lib/components/ui/dropdown-menu/index.js';
 	import * as Table from '$lib/components/ui/table/index.js';
-	import ListFilter from 'lucide-svelte/icons/list-filter';
-	import CirclePlus from 'lucide-svelte/icons/circle-plus';
-	import Search from 'lucide-svelte/icons/search';
 	import { Input } from '$lib/components/ui/input/index.js';
 
 	import { db } from '$lib/firebase/firebase';
@@ -29,7 +25,7 @@
 	};
 
 	const handleUpProduct = async (id: string) => {
-		goto('products/'+id)
+		goto('products/' + id);
 	};
 
 	const delProduct = async (id: string) => {
@@ -73,7 +69,7 @@
 				<!-- <Button size="sm" variant="outline" class="h-8 gap-1">
                 <File class="h-3.5 w-3.5" />
                 <span class="sr-only sm:not-sr-only sm:whitespace-nowrap"> Export </span>
-            </Button> -->
+            	</Button> -->
 				<a href="products/add">
 					<Button size="sm" class="h-8 gap-1">
 						<CirclePlus class="h-3.5 w-3.5" />
@@ -120,7 +116,9 @@
 						<Table.Cell class="font-medium">{prod.stock}</Table.Cell>
 						<Table.Cell class="hidden md:table-cell">${prod.price}</Table.Cell>
 						<Table.Cell class="hidden md:table-cell">{prod.category}</Table.Cell>
-						<Table.Cell class="hidden md:table-cell">{prod.createdAt?.toDate()?.toDateString()}</Table.Cell>
+						<Table.Cell class="hidden md:table-cell"
+							>{prod.createdAt?.toDate()?.toDateString()}</Table.Cell
+						>
 						<Table.Cell>
 							<DropdownMenu.Root>
 								<DropdownMenu.Trigger asChild let:builder>
@@ -131,7 +129,9 @@
 								</DropdownMenu.Trigger>
 								<DropdownMenu.Content align="end">
 									<DropdownMenu.Label>Actions</DropdownMenu.Label>
-									<DropdownMenu.Item on:click={() => handleUpProduct(prod.id)}>Edit</DropdownMenu.Item>
+									<DropdownMenu.Item on:click={() => handleUpProduct(prod.id)}
+										>Edit</DropdownMenu.Item
+									>
 									<DropdownMenu.Item on:click={() => delProduct(prod.id)}>Delete</DropdownMenu.Item>
 								</DropdownMenu.Content>
 							</DropdownMenu.Root>

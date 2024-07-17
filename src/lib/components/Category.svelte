@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { Search, Ellipsis } from '$lib/icons';
 	import { Button, buttonVariants } from '$lib/components/ui/button/index.js';
 	import * as Dialog from '$lib/components/ui/dialog/index.js';
 	import { Input } from '$lib/components/ui/input/index.js';
@@ -10,7 +11,6 @@
 	import { onMount } from 'svelte';
 	import CirclePlus from 'lucide-svelte/icons/circle-plus';
 	import * as DropdownMenu from '$lib/components/ui/dropdown-menu/index.js';
-	import Ellipsis from 'lucide-svelte/icons/ellipsis';
 
 	let categoryList: any[] = [];
 	let categoryId = '';
@@ -59,14 +59,14 @@
 	<!-- <Dialog.Trigger class={buttonVariants({ variant: 'outline' })}>Edit Profile</Dialog.Trigger> -->
 	<Dialog.Content class="sm:max-w-[425px]">
 		<Dialog.Header>
-			<Dialog.Title>Edit category</Dialog.Title>
+			<Dialog.Title>New category</Dialog.Title>
 			<Dialog.Description>
-				Make changes to your profile here. Click save when you're done.
+				Make changes to category here. Click save when you're done.
 			</Dialog.Description>
 		</Dialog.Header>
 		<div class="grid gap-4 py-4">
-			<div class="grid grid-cols-4 items-center gap-4">
-				<Label for="name" class="text-right">Category Name</Label>
+			<div class="grid grid-cols-1 items-center gap-2">
+				<Label for="name">Category Name</Label>
 				<Input bind:value={categoryId} class="hidden" />
 				<Input bind:value={categoryName} class="col-span-3" />
 			</div>
@@ -77,19 +77,19 @@
 	</Dialog.Content>
 </Dialog.Root>
 
-<Card.Root
-	class="xl:col-span-2"
-	data-x-chunk-name="dashboard-01-chunk-4"
-	data-x-chunk-description="A card showing a table of recent transactions with a link to view all transactions."
->
+<Card.Root>
 	<Card.Header class="flex flex-row items-center">
-		<div class="grid gap-2">
-			<Card.Title>Categories</Card.Title>
-			<Card.Description>Recent transactions from your store.</Card.Description>
+		<div class="relative basis-6/12">
+			<Search class="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
+			<Input
+				type="search"
+				placeholder="Search category..."
+				class="w-full appearance-none bg-background pl-8 shadow-none md:w-2/3 lg:w-3/4"
+			/>
 		</div>
 		<Button on:click={openAddCat} size="sm" class="ml-auto gap-1">
 			<CirclePlus class="h-3.5 w-3.5" />
-			<span class="sr-only sm:not-sr-only sm:whitespace-nowrap"> Add Product </span>
+			<span class="sr-only sm:not-sr-only sm:whitespace-nowrap"> Add category </span>
 		</Button>
 	</Card.Header>
 	<Card.Content class="max-h-[60vh] overflow-y-auto">
