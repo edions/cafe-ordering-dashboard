@@ -7,7 +7,7 @@
 	import { Label } from '$lib/components/ui/label/index.js';
 	import * as Select from '$lib/components/ui/select/index.js';
 	import { Textarea } from '$lib/components/ui/textarea/index.js';
-	import { collection, getDocs, addDoc } from 'firebase/firestore';
+	import { collection, getDocs, addDoc, serverTimestamp } from 'firebase/firestore';
 	import { db } from '$lib/firebase';
 	import { onMount } from 'svelte';
 	import { goto } from '$app/navigation';
@@ -38,7 +38,8 @@
 			stock,
 			price,
 			category,
-			status
+			status,
+			createdAt: serverTimestamp()
 		});
 		goto('/products');
 	};
