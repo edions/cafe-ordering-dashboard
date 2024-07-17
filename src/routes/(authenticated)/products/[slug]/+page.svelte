@@ -7,6 +7,48 @@
 	import { Label } from '$lib/components/ui/label/index.js';
 	import * as Select from '$lib/components/ui/select/index.js';
 	import { Textarea } from '$lib/components/ui/textarea/index.js';
+	import { collection, getDocs, addDoc } from 'firebase/firestore';
+	import { db } from '$lib/firebase';
+	import { onMount } from 'svelte';
+	import { goto } from '$app/navigation';
+
+	let catList:any[] = []
+
+	let productName = '';
+	let productDescription = '';
+	let stock = 0;
+	let price = 0;
+	let category:any = '';
+	let status:any = '';
+
+	let saving = false;
+
+	let selected = { value: "", label: "" };
+
+	onMount(async () => {
+		getCategory();
+	});
+
+	const addProduct = async () => {
+		saving = true;
+		const ref = collection(db, 'product2');
+		await addDoc(ref, {
+			productName,
+			productDescription,
+			stock,
+			price,
+			category,
+			status
+		});
+		goto('/products');
+	};
+
+	const getCategory = async () => {
+		const ref = collection(db, 'category');
+		const snapshot = await getDocs(ref);
+		catList = snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
+	};
+	
 </script>
 
 <main class="grid flex-1 items-start gap-4 p-4 sm:px-6 sm:py-0 md:gap-8 lg:pt-6 max-h-[90vh] overflow-y-auto">
@@ -24,7 +66,13 @@
 				<a href="../products">
 					<Button variant="outline" size="sm">Discard</Button>
 				</a>
-				<Button size="sm">Save Product</Button>
+				<Button size="sm" on:click={addProduct} disabled={saving}>
+					{#if saving}
+					Saving
+					{:else}
+					Save Product
+					{/if}
+				</Button>
 			</div>
 		</div>
 		<div class="grid gap-4 md:grid-cols-[1fr_250px] lg:grid-cols-3 lg:gap-8">
@@ -40,13 +88,13 @@
 						<div class="grid gap-6">
 							<div class="grid gap-3">
 								<Label for="name">Name</Label>
-								<Input id="name" type="text" class="w-full" value="Gamer Gear Pro Controller" />
+								<Input bind:value={productName} id="name" type="text" class="w-full" />
 							</div>
 							<div class="grid gap-3">
 								<Label for="description">Description</Label>
 								<Textarea
+									bind:value={productDescription}
 									id="description"
-									value="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam auctor, nisl nec ultricies ultricies, nunc nisl ultricies nunc, nec ultricies nunc nisl nec nunc."
 									class="min-h-32"
 								/>
 							</div>
@@ -66,11 +114,11 @@
 								<div class="grid gap-6 sm:grid-cols-2">
 									<div class="grid gap-3">
 										<Label for="stock-1">Stock</Label>
-										<Input id="stock-1" type="number" value="100" />
+										<Input bind:value={stock} id="stock-1" type="number" />
 									</div>
 									<div class="grid gap-3">
 										<Label for="price-1">Price</Label>
-										<Input id="price-1" type="number" value="99.99" />
+										<Input bind:value={price} id="price-1" type="number" />
 									</div>
 								</div>
 							</Card.Content>
@@ -86,14 +134,19 @@
 							</Card.Header>
 							<Card.Content>
 								<Label for="category">Category</Label>
-								<Select.Root>
+								<Select.Root
+									onSelectedChange={(v) => {
+										v && (category = v.value);
+									}}
+								>
 									<Select.Trigger id="category" aria-label="Select category">
 										<Select.Value placeholder="Select category" />
 									</Select.Trigger>
 									<Select.Content>
-										<Select.Item value="clothing" label="Clothing">Clothing</Select.Item>
-										<Select.Item value="electronics" label="Electronics">Electronics</Select.Item>
-										<Select.Item value="accessories" label="Accessories">Accessories</Select.Item>
+										{#each catList as cat}
+											<Select.Item value={cat.categoryName} label={cat.categoryName}>
+												{cat.categoryName}</Select.Item>
+										{/each}
 									</Select.Content>
 								</Select.Root>
 							</Card.Content>
@@ -113,7 +166,12 @@
 						<div class="grid gap-6">
 							<div class="grid gap-3">
 								<Label for="status">Status</Label>
-								<Select.Root>
+								<Select.Root
+									bind:selected
+									onSelectedChange={(v) => {
+										v && (status = v.value);
+									}}
+								>
 									<Select.Trigger id="status" aria-label="Select status">
 										<Select.Value placeholder="Select status" />
 									</Select.Trigger>
