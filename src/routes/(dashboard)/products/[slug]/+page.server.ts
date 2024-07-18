@@ -1,5 +1,6 @@
 import { db } from "$lib/firebase/firebase";
 import { getFile, uploadFile } from "$lib/firebase/storage";
+import { redirect } from "@sveltejs/kit";
 import { addDoc, collection, doc, serverTimestamp, updateDoc } from "firebase/firestore";
 
 export const actions = {
@@ -8,9 +9,11 @@ export const actions = {
         const addProductData = await request.formData();
         const productData = Object.fromEntries([...addProductData]);
 
-        const image = productData['imageUrl'] as File;
-		const imagePath = await uploadFile(image, 'products/');
-		const imageUrl = await getFile(imagePath);
+        if (productData['imageUrl']) {
+            const image = productData['imageUrl'] as File;
+            const imagePath = await uploadFile(image, 'products/');
+            productData['imageUrl'] = await getFile(imagePath);
+        }
 
         try {
             if(productId !== 'add') {
@@ -22,7 +25,6 @@ export const actions = {
                 const ref = collection(db, 'product2');
                 await addDoc(ref, {
                     ...productData,
-                    imageUrl,
                     createdAt: serverTimestamp(),
                 });
             }
@@ -31,5 +33,7 @@ export const actions = {
                 error
             }
         }
+
+        throw redirect(304, '/products');
     },
 };

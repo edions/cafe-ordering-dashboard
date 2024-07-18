@@ -1,7 +1,6 @@
 <script lang="ts">
 	import Image from 'lucide-svelte/icons/image';
 	import LoaderCircle from 'lucide-svelte/icons/loader-circle';
-	import { Badge } from '$lib/components/ui/badge/index.js';
 	import { Button } from '$lib/components/ui/button/index.js';
 	import * as Card from '$lib/components/ui/card/index.js';
 	import { Input } from '$lib/components/ui/input/index.js';
@@ -12,17 +11,16 @@
 		collection,
 		doc,
 		getDocs,
-		addDoc,
-		updateDoc,
-		serverTimestamp,
 		getDoc
 	} from 'firebase/firestore';
 	import { db } from '$lib/firebase/firebase';
 	import { onMount } from 'svelte';
 	import { goto } from '$app/navigation';
 	import { page } from '$app/stores';
-	import { getFile, uploadFile } from '$lib/firebase/storage';
 	import { error } from '@sveltejs/kit';
+	import { enhance } from '$app/forms';
+
+
 
 	let catList: any[] = [];
 
@@ -33,7 +31,7 @@
 	let category: any;
 	let status: any;
 
-	let saving = false;
+	let savingInProgress = false;
 
 	//file upload
 	let selectedImg: File;
@@ -52,49 +50,6 @@
 			getCategory();
 		}
 	});
-
-	const saveProduct = async () => {
-		if (slug !== 'add') {
-			editProduct();
-		} else {
-			addProduct();
-		}
-	};
-
-	const addProduct = async () => {
-		saving = true;
-
-		const folder = 'products/';
-		const imagePath = await uploadFile(selectedImg, folder);
-		const imageUrl = await getFile(imagePath);
-
-		const ref = collection(db, 'product2');
-		await addDoc(ref, {
-			productName,
-			productDescription,
-			stock,
-			price,
-			category,
-			status,
-			imageUrl,
-			createdAt: serverTimestamp()
-		});
-		goto('/products');
-	};
-
-	const editProduct = async () => {
-		saving = true;
-		const ref = doc(db, 'product2', slug);
-		await updateDoc(ref, {
-			productName,
-			productDescription,
-			stock,
-			price,
-			category: category.value,
-			status: status.value
-		});
-		goto('/products');
-	};
 
 	const getCurProduct = async () => {
 		showImage = true;
@@ -142,7 +97,9 @@
 	class="grid max-h-[90vh] flex-1 items-start gap-4 overflow-y-auto p-4 sm:px-6 sm:py-0 md:gap-8 lg:pt-6"
 >
 	<div class="mx-auto grid max-w-[59rem] flex-1 auto-rows-max gap-4">
-		<form method="POST" enctype="multipart/form-data">
+		<form method="POST" enctype="multipart/form-data" use:enhance={() => {
+			savingInProgress = true;
+		}}>
 			<div class="flex items-center gap-4">
 				<!-- <Button variant="outline" size="icon" class="h-7 w-7">
 					<ChevronLeft class="h-4 w-4" />
@@ -153,9 +110,11 @@
 					<!-- <Badge variant="outline" class="ml-auto sm:ml-0">{status.value}</Badge> -->
 				{/if}
 				<div class="hidden items-center gap-2 md:ml-auto md:flex">
-					<Button variant="outline" size="sm" on:click={() => goto('/products')} disabled={saving}>Discard</Button>
+					<a href="/products">
+						<Button variant="outline" size="sm" disabled={savingInProgress}>Discard</Button>
+					</a>
 					<Button size="sm" type="submit">
-						{#if saving}
+						{#if savingInProgress}
 							<LoaderCircle class="mr-2 h-4 w-4 animate-spin" />
 							Please wait
 						{:else}
@@ -179,7 +138,7 @@
 										name="productName"
 										type="text"
 										class="w-full"
-										disabled={saving}
+										disabled={savingInProgress}
 									/>
 								</div>
 								<div class="grid gap-3">
@@ -188,7 +147,7 @@
 										bind:value={productDescription}
 										name="productDescription"
 										class="min-h-32"
-										disabled={saving}
+										disabled={savingInProgress}
 									/>
 								</div>
 							</div>
@@ -208,15 +167,15 @@
 												bind:value={stock}
 												name="stock"
 												type="number"
-												disabled={saving} />
+												disabled={savingInProgress} />
 										</div>
 										<div class="grid gap-3">
 											<Label>Price</Label>
 											<Input
 												bind:value={price}
-												id="price"
+												name="price"
 												type="number"
-												disabled={saving} />
+												disabled={savingInProgress} />
 										</div>
 									</div>
 								</Card.Content>
@@ -230,7 +189,7 @@
 								<Card.Content>
 									<Label>Category</Label>
 									<Select.Root
-										disabled={saving}
+										disabled={savingInProgress}
 										selected={category}
 										onSelectedChange={(v) => {
 											v && (category = v.value);
@@ -263,7 +222,7 @@
 								<div class="grid gap-3">
 									<Label for="status">Status</Label>
 									<Select.Root
-										disabled={saving}
+										disabled={savingInProgress}
 										selected={status}
 										onSelectedChange={(v) => {
 											v && (status = v.value);
@@ -315,11 +274,11 @@
 				</div>
 			</div>
 			<div class="flex items-center justify-center gap-2 md:hidden">
-				<Button variant="outline" size="sm" on:click={() => goto('/products')} disabled={saving}
+				<Button variant="outline" size="sm" on:click={() => goto('/products')} disabled={savingInProgress}
 					>Discard</Button
 				>
-				<Button size="sm" on:click={saveProduct} disabled={saving}>
-					{#if saving}
+				<Button size="sm" disabled={savingInProgress}>
+					{#if savingInProgress}
 						<LoaderCircle class="mr-2 h-4 w-4 animate-spin" />
 						Please wait
 					{:else}
