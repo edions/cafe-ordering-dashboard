@@ -36,14 +36,14 @@
 			<div class="flex-1">
 				<nav class="grid items-start px-2 text-sm font-medium lg:px-4">
 					<a
-						href="/dashboard"
+						href="/"
 						class={`
-							${$page.route.id?.includes("dashboard") ? 'text-primary bg-muted' : ''}
+							${$page.url.pathname === '/' ? 'text-primary bg-muted' : ''}
 							flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary`}
-					>
+						>
 						<Home class="h-6 w-6" />
 						Dashboard
-					</a>
+						</a>
                     <a
 						href="/products"
 						class={`

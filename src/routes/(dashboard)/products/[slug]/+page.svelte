@@ -142,17 +142,172 @@
 	class="grid max-h-[90vh] flex-1 items-start gap-4 overflow-y-auto p-4 sm:px-6 sm:py-0 md:gap-8 lg:pt-6"
 >
 	<div class="mx-auto grid max-w-[59rem] flex-1 auto-rows-max gap-4">
-		<div class="flex items-center gap-4">
-			<!-- <Button variant="outline" size="icon" class="h-7 w-7">
-				<ChevronLeft class="h-4 w-4" />
-				<span class="sr-only">Back</span>
-			</Button> -->
-			{#if slug !== 'add'}
-				<h1 class="flex-1 shrink-0 whitespace-nowrap text-xl font-semibold tracking-tight sm:grow-0">{productName}</h1>
-				<!-- <Badge variant="outline" class="ml-auto sm:ml-0">{status.value}</Badge> -->
-			{/if}
-			<div class="hidden items-center gap-2 md:ml-auto md:flex">
-				<Button variant="outline" size="sm" on:click={() => goto('/products')} disabled={saving}>Discard</Button>
+		<form method="POST">
+			<div class="flex items-center gap-4">
+				<!-- <Button variant="outline" size="icon" class="h-7 w-7">
+					<ChevronLeft class="h-4 w-4" />
+					<span class="sr-only">Back</span>
+				</Button> -->
+				{#if slug !== 'add'}
+					<h1 class="flex-1 shrink-0 whitespace-nowrap text-xl font-semibold tracking-tight sm:grow-0">{productName}</h1>
+					<!-- <Badge variant="outline" class="ml-auto sm:ml-0">{status.value}</Badge> -->
+				{/if}
+				<div class="hidden items-center gap-2 md:ml-auto md:flex">
+					<Button variant="outline" size="sm" on:click={() => goto('/products')} disabled={saving}>Discard</Button>
+					<Button size="sm" on:click={saveProduct} disabled={saving}>
+						{#if saving}
+							<LoaderCircle class="mr-2 h-4 w-4 animate-spin" />
+							Please wait
+						{:else}
+							Save Product
+						{/if}
+					</Button>
+				</div>
+			</div>
+			<div class="grid gap-4 md:grid-cols-[1fr_250px] lg:grid-cols-3 lg:gap-8">
+				<div class="grid auto-rows-max items-start gap-4 lg:col-span-2 lg:gap-8">
+					<Card.Root>
+						<Card.Header>
+							<Card.Title>Product Details</Card.Title>
+						</Card.Header>
+						<Card.Content>
+							<div class="grid gap-6">
+								<div class="grid gap-3">
+									<Label for="name">Name</Label>
+									<Input
+										bind:value={productName}
+										id="name"
+										type="text"
+										class="w-full"
+										disabled={saving}
+									/>
+								</div>
+								<div class="grid gap-3">
+									<Label for="description">Description</Label>
+									<Textarea
+										bind:value={productDescription}
+										id="description"
+										class="min-h-32"
+										disabled={saving}
+									/>
+								</div>
+							</div>
+						</Card.Content>
+					</Card.Root>
+					<div class="grid gap-4 sm:grid-cols-2">
+						<div class="grid gap-2">
+							<Card.Root>
+								<Card.Header>
+									<Card.Title>Stock</Card.Title>
+								</Card.Header>
+								<Card.Content>
+									<div class="grid gap-6 sm:grid-cols-2">
+										<div class="grid gap-3">
+											<Label for="stock-1">Stock</Label>
+											<Input bind:value={stock} id="stock-1" type="number" disabled={saving} />
+										</div>
+										<div class="grid gap-3">
+											<Label for="price-1">Price</Label>
+											<Input bind:value={price} id="price-1" type="number" disabled={saving} />
+										</div>
+									</div>
+								</Card.Content>
+							</Card.Root>
+						</div>
+						<div class="grid gap-2">
+							<Card.Root>
+								<Card.Header>
+									<Card.Title>Product Category</Card.Title>
+								</Card.Header>
+								<Card.Content>
+									<Label for="category">Category</Label>
+									<Select.Root
+										disabled={saving}
+										selected={category}
+										onSelectedChange={(v) => {
+											v && (category = v.value);
+										}}
+									>
+										<Select.Trigger id="category" aria-label="Select category">
+											<Select.Value placeholder="Select category" />
+										</Select.Trigger>
+										<Select.Content>
+											{#each catList as cat}
+												<Select.Item value={cat.categoryName} label={cat.categoryName}>
+													{cat.categoryName}</Select.Item
+												>
+											{/each}
+										</Select.Content>
+									</Select.Root>
+								</Card.Content>
+							</Card.Root>
+						</div>
+					</div>
+				</div>
+				<div class="grid auto-rows-max items-start gap-4 lg:gap-8">
+					<Card.Root>
+						<Card.Header>
+							<Card.Title>Product Status</Card.Title>
+						</Card.Header>
+						<Card.Content>
+							<div class="grid gap-6">
+								<div class="grid gap-3">
+									<Label for="status">Status</Label>
+									<Select.Root
+										disabled={saving}
+										selected={status}
+										onSelectedChange={(v) => {
+											v && (status = v.value);
+										}}
+									>
+										<Select.Trigger id="status" aria-label="Select status">
+											<Select.Value placeholder="Select status" />
+										</Select.Trigger>
+										<Select.Content>
+											<Select.Item value="draft" label="Draft">Draft</Select.Item>
+											<Select.Item value="published" label="Active">Active</Select.Item>
+											<Select.Item value="archived" label="Archived">Archived</Select.Item>
+										</Select.Content>
+									</Select.Root>
+								</div>
+							</div>
+						</Card.Content>
+					</Card.Root>
+					<Card.Root class="overflow-hidden">
+						<Card.Header>
+							<Card.Title>Product Images</Card.Title>
+						</Card.Header>
+						<Card.Content>
+							<div class="grid justify-center gap-2">
+								{#if showImage}
+									<img
+										alt="Product"
+										class="aspect-square w-full rounded-md object-cover"
+										height="300"
+										src={image}
+										width="300"
+									/>
+								{:else}
+									<input
+										bind:this={imgInput}
+										on:change={onImageUpload}
+										id="image-up"
+										type="file"
+										class="hidden"
+									/>
+									<label for="image-up" class="cursor-pointer">
+										<Image class="aspect-square h-24 w-24 rounded-md object-cover" />
+									</label>
+								{/if}
+							</div>
+						</Card.Content>
+					</Card.Root>
+				</div>
+			</div>
+			<div class="flex items-center justify-center gap-2 md:hidden">
+				<Button variant="outline" size="sm" on:click={() => goto('/products')} disabled={saving}
+					>Discard</Button
+				>
 				<Button size="sm" on:click={saveProduct} disabled={saving}>
 					{#if saving}
 						<LoaderCircle class="mr-2 h-4 w-4 animate-spin" />
@@ -162,159 +317,6 @@
 					{/if}
 				</Button>
 			</div>
-		</div>
-		<div class="grid gap-4 md:grid-cols-[1fr_250px] lg:grid-cols-3 lg:gap-8">
-			<div class="grid auto-rows-max items-start gap-4 lg:col-span-2 lg:gap-8">
-				<Card.Root>
-					<Card.Header>
-						<Card.Title>Product Details</Card.Title>
-					</Card.Header>
-					<Card.Content>
-						<div class="grid gap-6">
-							<div class="grid gap-3">
-								<Label for="name">Name</Label>
-								<Input
-									bind:value={productName}
-									id="name"
-									type="text"
-									class="w-full"
-									disabled={saving}
-								/>
-							</div>
-							<div class="grid gap-3">
-								<Label for="description">Description</Label>
-								<Textarea
-									bind:value={productDescription}
-									id="description"
-									class="min-h-32"
-									disabled={saving}
-								/>
-							</div>
-						</div>
-					</Card.Content>
-				</Card.Root>
-				<div class="grid gap-4 sm:grid-cols-2">
-					<div class="grid gap-2">
-						<Card.Root>
-							<Card.Header>
-								<Card.Title>Stock</Card.Title>
-							</Card.Header>
-							<Card.Content>
-								<div class="grid gap-6 sm:grid-cols-2">
-									<div class="grid gap-3">
-										<Label for="stock-1">Stock</Label>
-										<Input bind:value={stock} id="stock-1" type="number" disabled={saving} />
-									</div>
-									<div class="grid gap-3">
-										<Label for="price-1">Price</Label>
-										<Input bind:value={price} id="price-1" type="number" disabled={saving} />
-									</div>
-								</div>
-							</Card.Content>
-						</Card.Root>
-					</div>
-					<div class="grid gap-2">
-						<Card.Root>
-							<Card.Header>
-								<Card.Title>Product Category</Card.Title>
-							</Card.Header>
-							<Card.Content>
-								<Label for="category">Category</Label>
-								<Select.Root
-									disabled={saving}
-									selected={category}
-									onSelectedChange={(v) => {
-										v && (category = v.value);
-									}}
-								>
-									<Select.Trigger id="category" aria-label="Select category">
-										<Select.Value placeholder="Select category" />
-									</Select.Trigger>
-									<Select.Content>
-										{#each catList as cat}
-											<Select.Item value={cat.categoryName} label={cat.categoryName}>
-												{cat.categoryName}</Select.Item
-											>
-										{/each}
-									</Select.Content>
-								</Select.Root>
-							</Card.Content>
-						</Card.Root>
-					</div>
-				</div>
-			</div>
-			<div class="grid auto-rows-max items-start gap-4 lg:gap-8">
-				<Card.Root>
-					<Card.Header>
-						<Card.Title>Product Status</Card.Title>
-					</Card.Header>
-					<Card.Content>
-						<div class="grid gap-6">
-							<div class="grid gap-3">
-								<Label for="status">Status</Label>
-								<Select.Root
-									disabled={saving}
-									selected={status}
-									onSelectedChange={(v) => {
-										v && (status = v.value);
-									}}
-								>
-									<Select.Trigger id="status" aria-label="Select status">
-										<Select.Value placeholder="Select status" />
-									</Select.Trigger>
-									<Select.Content>
-										<Select.Item value="draft" label="Draft">Draft</Select.Item>
-										<Select.Item value="published" label="Active">Active</Select.Item>
-										<Select.Item value="archived" label="Archived">Archived</Select.Item>
-									</Select.Content>
-								</Select.Root>
-							</div>
-						</div>
-					</Card.Content>
-				</Card.Root>
-				<Card.Root class="overflow-hidden">
-					<Card.Header>
-						<Card.Title>Product Images</Card.Title>
-					</Card.Header>
-					<Card.Content>
-						<div class="grid justify-center gap-2">
-							{#if showImage}
-								<img
-									alt="Product"
-									class="aspect-square w-full rounded-md object-cover"
-									height="300"
-									src={image}
-									width="300"
-								/>
-							{:else}
-								<input
-									bind:this={imgInput}
-									on:change={onImageUpload}
-									id="image-up"
-									type="file"
-									class="hidden"
-								/>
-								<label for="image-up" class="cursor-pointer">
-									<Image class="aspect-square h-24 w-24 rounded-md object-cover" />
-								</label>
-							{/if}
-						</div>
-					</Card.Content>
-				</Card.Root>
-			</div>
-		</div>
-		<div class="flex items-center justify-center gap-2 md:hidden">
-			<Button variant="outline" size="sm" on:click={() => goto('/products')} disabled={saving}
-				>Discard</Button
-			>
-			<Button size="sm" on:click={saveProduct} disabled={saving}>
-				{#if saving}
-					<LoaderCircle class="mr-2 h-4 w-4 animate-spin" />
-					Please wait
-				{:else}
-					Save Product
-				{/if}
-			</Button>
-		</div>
+		</form>
 	</div>
 </main>
