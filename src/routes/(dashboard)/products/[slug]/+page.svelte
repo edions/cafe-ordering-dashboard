@@ -295,7 +295,7 @@
 									class="hidden"
 								/>
 								<label for="image-up" class="cursor-pointer">
-									<Image class="aspect-square h-24 w-24 w-full rounded-md object-cover" />
+									<Image class="aspect-square h-24 w-24 rounded-md object-cover" />
 								</label>
 							{/if}
 						</div>
