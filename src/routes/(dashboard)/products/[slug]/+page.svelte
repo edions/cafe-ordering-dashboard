@@ -142,7 +142,7 @@
 	class="grid max-h-[90vh] flex-1 items-start gap-4 overflow-y-auto p-4 sm:px-6 sm:py-0 md:gap-8 lg:pt-6"
 >
 	<div class="mx-auto grid max-w-[59rem] flex-1 auto-rows-max gap-4">
-		<form method="POST">
+		<form method="POST" enctype="multipart/form-data">
 			<div class="flex items-center gap-4">
 				<!-- <Button variant="outline" size="icon" class="h-7 w-7">
 					<ChevronLeft class="h-4 w-4" />
@@ -154,7 +154,7 @@
 				{/if}
 				<div class="hidden items-center gap-2 md:ml-auto md:flex">
 					<Button variant="outline" size="sm" on:click={() => goto('/products')} disabled={saving}>Discard</Button>
-					<Button size="sm" on:click={saveProduct} disabled={saving}>
+					<Button size="sm" type="submit">
 						{#if saving}
 							<LoaderCircle class="mr-2 h-4 w-4 animate-spin" />
 							Please wait
@@ -173,20 +173,20 @@
 						<Card.Content>
 							<div class="grid gap-6">
 								<div class="grid gap-3">
-									<Label for="name">Name</Label>
+									<Label>Name</Label>
 									<Input
 										bind:value={productName}
-										id="name"
+										name="productName"
 										type="text"
 										class="w-full"
 										disabled={saving}
 									/>
 								</div>
 								<div class="grid gap-3">
-									<Label for="description">Description</Label>
+									<Label>Description</Label>
 									<Textarea
 										bind:value={productDescription}
-										id="description"
+										name="productDescription"
 										class="min-h-32"
 										disabled={saving}
 									/>
@@ -203,12 +203,20 @@
 								<Card.Content>
 									<div class="grid gap-6 sm:grid-cols-2">
 										<div class="grid gap-3">
-											<Label for="stock-1">Stock</Label>
-											<Input bind:value={stock} id="stock-1" type="number" disabled={saving} />
+											<Label>Stock</Label>
+											<Input
+												bind:value={stock}
+												name="stock"
+												type="number"
+												disabled={saving} />
 										</div>
 										<div class="grid gap-3">
-											<Label for="price-1">Price</Label>
-											<Input bind:value={price} id="price-1" type="number" disabled={saving} />
+											<Label>Price</Label>
+											<Input
+												bind:value={price}
+												id="price"
+												type="number"
+												disabled={saving} />
 										</div>
 									</div>
 								</Card.Content>
@@ -220,7 +228,7 @@
 									<Card.Title>Product Category</Card.Title>
 								</Card.Header>
 								<Card.Content>
-									<Label for="category">Category</Label>
+									<Label>Category</Label>
 									<Select.Root
 										disabled={saving}
 										selected={category}
@@ -228,7 +236,7 @@
 											v && (category = v.value);
 										}}
 									>
-										<Select.Trigger id="category" aria-label="Select category">
+										<Select.Trigger>
 											<Select.Value placeholder="Select category" />
 										</Select.Trigger>
 										<Select.Content>
@@ -238,6 +246,7 @@
 												>
 											{/each}
 										</Select.Content>
+										<Select.Input name="category" />
 									</Select.Root>
 								</Card.Content>
 							</Card.Root>
@@ -260,7 +269,7 @@
 											v && (status = v.value);
 										}}
 									>
-										<Select.Trigger id="status" aria-label="Select status">
+										<Select.Trigger>
 											<Select.Value placeholder="Select status" />
 										</Select.Trigger>
 										<Select.Content>
@@ -268,6 +277,7 @@
 											<Select.Item value="published" label="Active">Active</Select.Item>
 											<Select.Item value="archived" label="Archived">Archived</Select.Item>
 										</Select.Content>
+										<Select.Input name="status" />
 									</Select.Root>
 								</div>
 							</div>
@@ -288,12 +298,12 @@
 										width="300"
 									/>
 								{:else}
+								<!-- bind:this={imgInput} -->
 									<input
-										bind:this={imgInput}
+										
 										on:change={onImageUpload}
-										id="image-up"
+										name="imageUrl"
 										type="file"
-										class="hidden"
 									/>
 									<label for="image-up" class="cursor-pointer">
 										<Image class="aspect-square h-24 w-24 rounded-md object-cover" />

@@ -1,21 +1,35 @@
 import { db } from "$lib/firebase/firebase";
-import { addDoc, collection, serverTimestamp } from "firebase/firestore";
+import { getFile, uploadFile } from "$lib/firebase/storage";
+import { addDoc, collection, doc, serverTimestamp, updateDoc } from "firebase/firestore";
 
 export const actions = {
-    addProduct: async ({ request }) => {
-        const productData = await request.formData();
-        const product = Object.fromEntries([...productData]);
+    default: async ({ params, request }) => {
+        const productId = params.slug;
+        const addProductData = await request.formData();
+        const productData = Object.fromEntries([...addProductData]);
+
+        const image = productData['imageUrl'] as File;
+		const imagePath = await uploadFile(image, 'products/');
+		const imageUrl = await getFile(imagePath);
 
         try {
-            const ref = collection(db, 'product2');
-            await addDoc(ref, {
-                ...product,
-                createdAt: serverTimestamp(),
-            });
+            if(productId !== 'add') {
+                const ref = doc(db, 'product2', productId);
+                await updateDoc(ref, {
+                    ...productData
+                });
+            } else {
+                const ref = collection(db, 'product2');
+                await addDoc(ref, {
+                    ...productData,
+                    imageUrl,
+                    createdAt: serverTimestamp(),
+                });
+            }
         } catch (error) {
             return {
                 error
             }
         }
-    }
+    },
 };
