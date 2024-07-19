@@ -9,12 +9,14 @@
 
 	import { db } from '$lib/firebase/firebase';
 	import { deleteDoc, doc } from 'firebase/firestore';
+	import { invalidate } from '$app/navigation';
 
 	export let data: any;
 
 	const delProduct = async (id: string) => {
 		const ref = doc(db, 'product2', id);
 		await deleteDoc(ref);
+		invalidate('products:now');
 	};
 </script>
 

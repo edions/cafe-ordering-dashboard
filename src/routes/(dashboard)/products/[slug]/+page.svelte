@@ -1,5 +1,4 @@
 <script lang="ts">
-	import Image from 'lucide-svelte/icons/image';
 	import LoaderCircle from 'lucide-svelte/icons/loader-circle';
 	import { Button } from '$lib/components/ui/button/index.js';
 	import * as Card from '$lib/components/ui/card/index.js';
@@ -7,67 +6,29 @@
 	import { Label } from '$lib/components/ui/label/index.js';
 	import * as Select from '$lib/components/ui/select/index.js';
 	import { Textarea } from '$lib/components/ui/textarea/index.js';
-	import {
-		collection,
-		doc,
-		getDocs,
-		getDoc
-	} from 'firebase/firestore';
+	import { collection, getDocs, } from 'firebase/firestore';
 	import { db } from '$lib/firebase/firebase';
 	import { onMount } from 'svelte';
-	import { goto } from '$app/navigation';
 	import { page } from '$app/stores';
-	import { error } from '@sveltejs/kit';
 	import { enhance } from '$app/forms';
+	import type { PageData } from './$types';
+	import { ImageUp } from '$lib/icons';
 
+	
+	export let data: PageData;
 
+	let slug = $page.params.slug;
+	let savingInProgress = false;
+
+	let status = { value: data.status, label: data.status };
+	let category = { value: data.category, label: data.category };
+	let image = data.image;
 
 	let catList: any[] = [];
 
-	let productName: string = '';
-	let productDescription: string = '';
-	let stock: number = 0;
-	let price: number = 0;
-	let category: any;
-	let status: any;
-
-	let savingInProgress = false;
-
-	//file upload
-	let selectedImg: File;
-
-	let imgInput: any;
-	let image: any;
-	let showImage = false;
-
-	let slug = $page.params.slug;
-
 	onMount(async () => {
-		if (slug !== 'add') {
-			getCurProduct();
-			getCategory();
-		} else {
-			getCategory();
-		}
+		getCategory();
 	});
-
-	const getCurProduct = async () => {
-		showImage = true;
-		const ref = doc(db, 'product2', slug);
-		const snapshot = await getDoc(ref);
-
-		if (snapshot.exists()) {
-			productName = snapshot.get('productName');
-			productDescription = snapshot.get('productDescription');
-			stock = snapshot.get('stock');
-			price = snapshot.get('price');
-			image = snapshot.get('imageUrl');
-			category = { value: snapshot.get('category'), label: snapshot.get('category') };
-			status = { value: snapshot.get('status'), label: snapshot.get('status') };
-		} else {
-			error(404, 'Product not found!');
-		}
-	};
 
 	const getCategory = async () => {
 		const ref = collection(db, 'category');
@@ -75,21 +36,13 @@
 		catList = snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
 	};
 
-	const onImageUpload = () => {
-		selectedImg = imgInput.files[0];
+	const onImageUpload = (event: Event) => {
+		const target = event.target as HTMLInputElement;
+		const file = target.files?.[0];
 
-		if (selectedImg) {
-			showImage = true;
-
-			const reader = new FileReader();
-			reader.onload = () => {
-				image = reader.result as string;
-			};
-			reader.readAsDataURL(selectedImg);
-
-			return;
+		if (file) {
+			image  = URL.createObjectURL(file);
 		}
-		showImage = false;
 	};
 </script>
 
@@ -100,13 +53,13 @@
 		<form method="POST" enctype="multipart/form-data" use:enhance={() => {
 			savingInProgress = true;
 		}}>
-			<div class="flex items-center gap-4">
+			<div class="flex items-center gap-4 pb-5">
 				<!-- <Button variant="outline" size="icon" class="h-7 w-7">
 					<ChevronLeft class="h-4 w-4" />
 					<span class="sr-only">Back</span>
 				</Button> -->
 				{#if slug !== 'add'}
-					<h1 class="flex-1 shrink-0 whitespace-nowrap text-xl font-semibold tracking-tight sm:grow-0">{productName}</h1>
+					<h1 class="flex-1 shrink-0 whitespace-nowrap text-xl font-semibold tracking-tight sm:grow-0">{data.productName}</h1>
 					<!-- <Badge variant="outline" class="ml-auto sm:ml-0">{status.value}</Badge> -->
 				{/if}
 				<div class="hidden items-center gap-2 md:ml-auto md:flex">
@@ -134,7 +87,7 @@
 								<div class="grid gap-3">
 									<Label>Name</Label>
 									<Input
-										bind:value={productName}
+										value={data.productName}
 										name="productName"
 										type="text"
 										class="w-full"
@@ -144,7 +97,7 @@
 								<div class="grid gap-3">
 									<Label>Description</Label>
 									<Textarea
-										bind:value={productDescription}
+										value={data.productDescription}
 										name="productDescription"
 										class="min-h-32"
 										disabled={savingInProgress}
@@ -164,7 +117,7 @@
 										<div class="grid gap-3">
 											<Label>Stock</Label>
 											<Input
-												bind:value={stock}
+												value={data.stock}
 												name="stock"
 												type="number"
 												disabled={savingInProgress} />
@@ -172,7 +125,7 @@
 										<div class="grid gap-3">
 											<Label>Price</Label>
 											<Input
-												bind:value={price}
+												value={data.price}
 												name="price"
 												type="number"
 												disabled={savingInProgress} />
@@ -191,9 +144,6 @@
 									<Select.Root
 										disabled={savingInProgress}
 										selected={category}
-										onSelectedChange={(v) => {
-											v && (category = v.value);
-										}}
 									>
 										<Select.Trigger>
 											<Select.Value placeholder="Select category" />
@@ -224,19 +174,16 @@
 									<Select.Root
 										disabled={savingInProgress}
 										selected={status}
-										onSelectedChange={(v) => {
-											v && (status = v.value);
-										}}
-									>
+										>
 										<Select.Trigger>
 											<Select.Value placeholder="Select status" />
 										</Select.Trigger>
 										<Select.Content>
-											<Select.Item value="draft" label="Draft">Draft</Select.Item>
-											<Select.Item value="published" label="Active">Active</Select.Item>
-											<Select.Item value="archived" label="Archived">Archived</Select.Item>
+											<Select.Item value="Draft" label="Draft">Draft</Select.Item>
+											<Select.Item value="Published" label="Active">Active</Select.Item>
+											<Select.Item value="Archived" label="Archived">Archived</Select.Item>
 										</Select.Content>
-										<Select.Input name="status" />
+										<Select.Input name="status"/>
 									</Select.Root>
 								</div>
 							</div>
@@ -248,24 +195,34 @@
 						</Card.Header>
 						<Card.Content>
 							<div class="grid justify-center gap-2">
-								{#if showImage}
-									<img
-										alt="Product"
-										class="aspect-square w-full rounded-md object-cover"
-										height="300"
-										src={image}
-										width="300"
-									/>
+								<Input
+									on:change={onImageUpload}
+									name="imageUrl"
+									type="file"
+									accept="image/*"
+									id="select-image"
+									class="hidden"
+									disabled={savingInProgress}
+								/>
+								{#if image}
+									<label for="select-image">
+										<img
+											alt="Product"
+											class="aspect-square w-full rounded-md object-cover"
+											height="300"
+											src={image}
+											width="300"
+										/>
+									</label>
 								{:else}
-								<!-- bind:this={imgInput} -->
-									<input
-										
-										on:change={onImageUpload}
-										name="imageUrl"
-										type="file"
-									/>
-									<label for="image-up" class="cursor-pointer">
-										<Image class="aspect-square h-24 w-24 rounded-md object-cover" />
+									<label for="select-image" class="flex flex-col items-center justify-center w-60 h-[244px] border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 dark:hover:bg-gray-800 dark:bg-gray-700 hover:bg-gray-100 dark:border-gray-600 dark:hover:border-gray-500">
+										<div class="flex flex-col items-center justify-center pt-5 pb-5">
+											<ImageUp  class="w-8 h-8 mb-4 text-gray-500 dark:text-gray-400" />
+											<p class="mb-2 text-sm text-gray-500 dark:text-gray-400">
+												<span class="font-semibold">Click to upload</span>
+											</p>
+											<p class="text-xs text-gray-500 dark:text-gray-400">SVG, PNG, JPG or GIF (MAX. 800x400px)</p>
+										</div>
 									</label>
 								{/if}
 							</div>
@@ -274,9 +231,9 @@
 				</div>
 			</div>
 			<div class="flex items-center justify-center gap-2 md:hidden">
-				<Button variant="outline" size="sm" on:click={() => goto('/products')} disabled={savingInProgress}
-					>Discard</Button
-				>
+				<a href="/products">
+					<Button variant="outline" size="sm" disabled={savingInProgress}>Discard</Button>
+				</a>
 				<Button size="sm" disabled={savingInProgress}>
 					{#if savingInProgress}
 						<LoaderCircle class="mr-2 h-4 w-4 animate-spin" />

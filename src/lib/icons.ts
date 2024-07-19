@@ -4,3 +4,4 @@ export { default as ListFilter } from 'lucide-svelte/icons/list-filter';
 export { default as CirclePlus } from 'lucide-svelte/icons/circle-plus';
 export { default as Trash2 } from 'lucide-svelte/icons/trash';
 export { default as Pencil } from 'lucide-svelte/icons/pencil';
+export { default as ImageUp } from 'lucide-svelte/icons/image-up';
