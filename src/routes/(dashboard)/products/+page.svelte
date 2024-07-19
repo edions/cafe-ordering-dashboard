@@ -2,6 +2,9 @@
 	import * as Tabs from '$lib/components/ui/tabs/index.js';
 	import Product from '$lib/components/Product.svelte';
 	import Category from '$lib/components/Category.svelte';
+	import type { PageData } from './$types';
+
+	export let data: PageData;
 </script>
 
 <main class="grid flex-1 items-start gap-4 p-4 sm:px-6 sm:py-0 md:gap-8 lg:p-6">
@@ -23,7 +26,7 @@
 			</div>
 		</div>
 		<Tabs.Content value="product">
-			<Product />
+			<Product {data}/>
 		</Tabs.Content>
 		<Tabs.Content value="category">
 			<Category />

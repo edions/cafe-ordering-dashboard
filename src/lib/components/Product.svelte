@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { Search, Ellipsis, ListFilter, CirclePlus } from '$lib/icons';
+	import { Search, Ellipsis, ListFilter, CirclePlus, Trash2, Pencil } from '$lib/icons';
 	import { Badge } from '$lib/components/ui/badge/index.js';
 	import { Button } from '$lib/components/ui/button/index.js';
 	import * as Card from '$lib/components/ui/card/index.js';
@@ -8,39 +8,18 @@
 	import { Input } from '$lib/components/ui/input/index.js';
 
 	import { db } from '$lib/firebase/firebase';
-	import { addDoc, collection, deleteDoc, doc, getDocs } from 'firebase/firestore';
-	import { onMount } from 'svelte';
-	import { goto } from '$app/navigation';
+	import { deleteDoc, doc } from 'firebase/firestore';
 
-	let productList: any[] = [];
-
-	onMount(async () => {
-		getProducts();
-	});
-
-	const getProducts = async () => {
-		const ref = collection(db, 'product2');
-		const snapshot = await getDocs(ref);
-		productList = snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
-	};
-
-	const handleUpProduct = async (id: string) => {
-		goto('products/' + id);
-	};
+	export let data: any;
 
 	const delProduct = async (id: string) => {
 		const ref = doc(db, 'product2', id);
 		await deleteDoc(ref);
-		getProducts();
 	};
 </script>
 
 <Card.Root class="flex max-h-[75vh] flex-col">
 	<Card.Header>
-		<!-- <Card.Title>Products</Card.Title>
-        <Card.Description>
-            Manage your products and view their sales performance.
-        </Card.Description> -->
 		<div class="flex items-center">
 			<div class="relative basis-6/12">
 				<Search class="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
@@ -66,10 +45,6 @@
 						<DropdownMenu.CheckboxItem>Archived</DropdownMenu.CheckboxItem>
 					</DropdownMenu.Content>
 				</DropdownMenu.Root>
-				<!-- <Button size="sm" variant="outline" class="h-8 gap-1">
-                <File class="h-3.5 w-3.5" />
-                <span class="sr-only sm:not-sr-only sm:whitespace-nowrap"> Export </span>
-            	</Button> -->
 				<a href="products/add">
 					<Button size="sm" class="h-8 gap-1">
 						<CirclePlus class="h-3.5 w-3.5" />
@@ -98,7 +73,7 @@
 				</Table.Row>
 			</Table.Header>
 			<Table.Body>
-				{#each productList as prod}
+				{#each data.productList as prod}
 					<Table.Row>
 						<Table.Cell class="hidden sm:table-cell">
 							<img
@@ -129,10 +104,16 @@
 								</DropdownMenu.Trigger>
 								<DropdownMenu.Content align="end">
 									<DropdownMenu.Label>Actions</DropdownMenu.Label>
-									<DropdownMenu.Item on:click={() => handleUpProduct(prod.id)}
-										>Edit</DropdownMenu.Item
-									>
-									<DropdownMenu.Item on:click={() => delProduct(prod.id)}>Delete</DropdownMenu.Item>
+									<a href={`products/${prod.id}`}>
+										<DropdownMenu.Item>
+											<Pencil class="h-4 w-4 pr-1" />
+											Edit
+										</DropdownMenu.Item>
+									</a>
+									<DropdownMenu.Item on:click={() => delProduct(prod.id)}>
+										<Trash2 class="h-4 w-4 pr-1" />
+										Delete
+									</DropdownMenu.Item>
 								</DropdownMenu.Content>
 							</DropdownMenu.Root>
 						</Table.Cell>
