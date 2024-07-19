@@ -12,6 +12,33 @@
 	import * as Table from '$lib/components/ui/table/index.js';
 	import * as Tabs from '$lib/components/ui/tabs/index.js';
 	import { Input } from '$lib/components/ui/input/index.js';
+
+	let item = [
+		{
+			id: "1",
+			customer: "test",
+			status: "test",
+			totalPrice: "999",
+			items: "55",
+			orderAt: "2023-07-12"
+		},
+		{
+			id: "1",
+			customer: "test",
+			status: "test",
+			totalPrice: "999",
+			items: "55",
+			orderAt: "2023-07-12"
+		},
+		{
+			id: "1",
+			customer: "test",
+			status: "test",
+			totalPrice: "999",
+			items: "55",
+			orderAt: "2023-07-12"
+		}
+	]
 </script>
 
 <main class="grid flex-1 items-start gap-4 p-4 sm:px-6 sm:py-0 md:gap-8 lg:p-6">
@@ -79,15 +106,16 @@
 							</Table.Row>
 						</Table.Header>
 						<Table.Body>
+							{#each item as orders}
 							<Table.Row>
-								<Table.Cell class="hidden sm:table-cell">ord123</Table.Cell>
-								<Table.Cell class="font-small">Laser Lemonade Machine</Table.Cell>
+								<Table.Cell class="hidden sm:table-cell">{orders.id}</Table.Cell>
+								<Table.Cell class="font-small">{orders.customer}</Table.Cell>
 								<Table.Cell>
-									<Badge variant="outline">Draft</Badge>
+									<Badge variant="outline">{orders.status}</Badge>
 								</Table.Cell>
-								<Table.Cell class="hidden md:table-cell">$499.99</Table.Cell>
-								<Table.Cell class="hidden md:table-cell">25</Table.Cell>
-								<Table.Cell class="hidden md:table-cell">2023-07-12 10:42 AM</Table.Cell>
+								<Table.Cell class="hidden md:table-cell">${orders.status}</Table.Cell>
+								<Table.Cell class="hidden md:table-cell">{orders.items}</Table.Cell>
+								<Table.Cell class="hidden md:table-cell">{orders.totalPrice}</Table.Cell>
 								<Table.Cell>
 									<DropdownMenu.Root>
 										<DropdownMenu.Trigger asChild let:builder>
@@ -104,56 +132,7 @@
 									</DropdownMenu.Root>
 								</Table.Cell>
 							</Table.Row>
-							<Table.Row>
-								<Table.Cell class="hidden sm:table-cell">ord123</Table.Cell>
-								<Table.Cell class="font-medium">Hypernova Headphones</Table.Cell>
-								<Table.Cell>
-									<Badge variant="outline">Active</Badge>
-								</Table.Cell>
-								<Table.Cell class="hidden md:table-cell">$129.99</Table.Cell>
-								<Table.Cell class="hidden md:table-cell">100</Table.Cell>
-								<Table.Cell class="hidden md:table-cell">2023-10-18 03:21 PM</Table.Cell>
-								<Table.Cell>
-									<DropdownMenu.Root>
-										<DropdownMenu.Trigger asChild let:builder>
-											<Button builders={[builder]} aria-haspopup="true" size="icon" variant="ghost">
-												<Ellipsis class="h-4 w-4" />
-												<span class="sr-only">Toggle menu</span>
-											</Button>
-										</DropdownMenu.Trigger>
-										<DropdownMenu.Content align="end">
-											<DropdownMenu.Label>Actions</DropdownMenu.Label>
-											<DropdownMenu.Item>Edit</DropdownMenu.Item>
-											<DropdownMenu.Item>Delete</DropdownMenu.Item>
-										</DropdownMenu.Content>
-									</DropdownMenu.Root>
-								</Table.Cell>
-							</Table.Row>
-							<Table.Row>
-								<Table.Cell class="hidden sm:table-cell">ord123</Table.Cell>
-								<Table.Cell class="font-medium">AeroGlow Desk Lamp</Table.Cell>
-								<Table.Cell>
-									<Badge variant="outline">Active</Badge>
-								</Table.Cell>
-								<Table.Cell class="hidden md:table-cell">$39.99</Table.Cell>
-								<Table.Cell class="hidden md:table-cell">50</Table.Cell>
-								<Table.Cell class="hidden md:table-cell">2023-11-29 08:15 AM</Table.Cell>
-								<Table.Cell>
-									<DropdownMenu.Root>
-										<DropdownMenu.Trigger asChild let:builder>
-											<Button builders={[builder]} aria-haspopup="true" size="icon" variant="ghost">
-												<Ellipsis class="h-4 w-4" />
-												<span class="sr-only">Toggle menu</span>
-											</Button>
-										</DropdownMenu.Trigger>
-										<DropdownMenu.Content align="end">
-											<DropdownMenu.Label>Actions</DropdownMenu.Label>
-											<DropdownMenu.Item>Edit</DropdownMenu.Item>
-											<DropdownMenu.Item>Delete</DropdownMenu.Item>
-										</DropdownMenu.Content>
-									</DropdownMenu.Root>
-								</Table.Cell>
-							</Table.Row>
+							{/each}
 						</Table.Body>
 					</Table.Root>
 				</Card.Content>

@@ -42,7 +42,9 @@
 					<DropdownMenu.Content align="end">
 						<DropdownMenu.Label>Filter by</DropdownMenu.Label>
 						<DropdownMenu.Separator />
-						<DropdownMenu.CheckboxItem checked>Active</DropdownMenu.CheckboxItem>
+						<a href="?filter=published">
+							<DropdownMenu.CheckboxItem checked>Active</DropdownMenu.CheckboxItem>
+						</a>
 						<DropdownMenu.CheckboxItem>Draft</DropdownMenu.CheckboxItem>
 						<DropdownMenu.CheckboxItem>Archived</DropdownMenu.CheckboxItem>
 					</DropdownMenu.Content>
