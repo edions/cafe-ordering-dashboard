@@ -6,17 +6,22 @@
 	import * as DropdownMenu from '$lib/components/ui/dropdown-menu/index.js';
 	import * as Table from '$lib/components/ui/table/index.js';
 	import { Input } from '$lib/components/ui/input/index.js';
-
 	import { db } from '$lib/firebase/firebase';
 	import { deleteDoc, doc } from 'firebase/firestore';
 	import { invalidate } from '$app/navigation';
+	import { toast } from 'svelte-sonner';
 
 	export let data: any;
 
 	const delProduct = async (id: string) => {
-		const ref = doc(db, 'product2', id);
-		await deleteDoc(ref);
-		invalidate('products:now');
+		try {
+			const ref = doc(db, 'product2', id);
+			await deleteDoc(ref);
+			toast.success("Successfully deleted product");
+			invalidate('products:now');
+		} catch {
+			toast.error("Failed to delete product. Please try again.");
+		}
 	};
 </script>
 

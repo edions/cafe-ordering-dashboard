@@ -12,33 +12,31 @@
 	import * as Table from '$lib/components/ui/table/index.js';
 	import * as Tabs from '$lib/components/ui/tabs/index.js';
 	import { Input } from '$lib/components/ui/input/index.js';
+	import { collection, doc, getDocs, updateDoc } from 'firebase/firestore';
+	import { db } from '$lib/firebase/firebase';
+	import { onMount } from 'svelte';
 
-	let item = [
-		{
-			id: "1",
-			customer: "test",
-			status: "test",
-			totalPrice: "999",
-			items: "55",
-			orderAt: "2023-07-12"
-		},
-		{
-			id: "1",
-			customer: "test",
-			status: "test",
-			totalPrice: "999",
-			items: "55",
-			orderAt: "2023-07-12"
-		},
-		{
-			id: "1",
-			customer: "test",
-			status: "test",
-			totalPrice: "999",
-			items: "55",
-			orderAt: "2023-07-12"
-		}
-	]
+	let orderList: any[] = [];
+
+	const getOrders = async () => {
+		const ref = collection(db, 'orders');
+		const snapshot = await getDocs(ref);
+		orderList = snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
+	};
+
+	const updateOrderStatus = async (orderId: string, newStatus: string) => {
+		const orderRef = doc(db, 'orders', orderId);
+		await updateDoc(orderRef, { status: newStatus });
+		const updatedOrderList = orderList.map((order) => 
+		order.id === orderId ? { ...order, status: newStatus } : order
+		);
+		orderList = updatedOrderList;
+  };
+
+	onMount(async () => {
+		getOrders();
+	});
+
 </script>
 
 <main class="grid flex-1 items-start gap-4 p-4 sm:px-6 sm:py-0 md:gap-8 lg:p-6">
@@ -106,16 +104,38 @@
 							</Table.Row>
 						</Table.Header>
 						<Table.Body>
-							{#each item as orders}
+							{#each orderList as orders}
 							<Table.Row>
 								<Table.Cell class="hidden sm:table-cell">{orders.id}</Table.Cell>
 								<Table.Cell class="font-small">{orders.customer}</Table.Cell>
 								<Table.Cell>
-									<Badge variant="outline">{orders.status}</Badge>
+									<DropdownMenu.Root>
+										<DropdownMenu.Trigger asChild let:builder>
+										  <Button aria-haspopup="true" size="sm" variant="outline" builders={[builder]}>
+											{orders.status}
+										  </Button>
+										</DropdownMenu.Trigger>
+										<DropdownMenu.Content align="end">
+										  <DropdownMenu.Label>Change Status</DropdownMenu.Label>
+										  <DropdownMenu.Separator />
+										  <DropdownMenu.Item>
+											<button on:click={() => updateOrderStatus(orders.id, 'Shipped')}>Shipped</button>
+										</DropdownMenu.Item>
+										  <DropdownMenu.Item>
+											<button on:click={() => updateOrderStatus(orders.id, 'Processing')}>Processing</button>
+										  </DropdownMenu.Item>
+										  <DropdownMenu.Item>
+											<button on:click={() => updateOrderStatus(orders.id, 'Delivered')}>Delivered</button>
+										  </DropdownMenu.Item>
+										  <DropdownMenu.Item>
+											<button on:click={() => updateOrderStatus(orders.id, 'Cancelled')}>Cancelled</button>
+										  </DropdownMenu.Item>
+										</DropdownMenu.Content>
+									</DropdownMenu.Root>
 								</Table.Cell>
-								<Table.Cell class="hidden md:table-cell">${orders.status}</Table.Cell>
+								<Table.Cell class="hidden md:table-cell">${orders.total}</Table.Cell>
 								<Table.Cell class="hidden md:table-cell">{orders.items}</Table.Cell>
-								<Table.Cell class="hidden md:table-cell">{orders.totalPrice}</Table.Cell>
+								<Table.Cell class="hidden md:table-cell">{orders.transactionTimestamp?.toDate()?.toDateString()}</Table.Cell>
 								<Table.Cell>
 									<DropdownMenu.Root>
 										<DropdownMenu.Trigger asChild let:builder>

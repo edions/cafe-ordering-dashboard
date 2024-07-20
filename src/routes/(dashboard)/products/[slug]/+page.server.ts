@@ -30,13 +30,15 @@ export const actions = {
         const addProductData = await request.formData();
         const productData = Object.fromEntries([...addProductData]);
 
-        console.log(productData['imageUrl'])
+        console.log((productData['imageUrl'] as File).size > 0)
 
         if (productData['imageUrl']) {
             const image = productData['imageUrl'] as File;
             const imagePath = await uploadFile(image, 'products/');
             productData['imageUrl'] = await getFile(imagePath);
         }
+
+        console.log(productData['imageUrl'])
 
         try {
             if(productId !== 'add') {
