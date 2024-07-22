@@ -30,18 +30,23 @@ export const actions = {
         const addProductData = await request.formData();
         const productData = Object.fromEntries([...addProductData]);
 
-        console.log((productData['imageUrl'] as File).size > 0)
-
-        if (productData['imageUrl']) {
-            const image = productData['imageUrl'] as File;
-            const imagePath = await uploadFile(image, 'products/');
-            productData['imageUrl'] = await getFile(imagePath);
-        }
-
-        console.log(productData['imageUrl'])
-
+        const imageFile = productData['imageUrl'] as File;
+        
         try {
-            if(productId !== 'add') {
+            if (imageFile && imageFile.size > 0) {
+                const imagePath = await uploadFile(imageFile, 'products/');
+                productData['imageUrl'] = await getFile(imagePath);
+            } else if (productId !== 'add') {
+                const ref = doc(db, 'product2', productId);
+                const snapshot = await getDoc(ref);
+                if (snapshot.exists()) {
+                    productData['imageUrl'] = snapshot.get('imageUrl');
+                }
+            } else {
+                productData['imageUrl'] = '';
+            }
+            
+            if (productId !== 'add') {
                 const ref = doc(db, 'product2', productId);
                 await updateDoc(ref, {
                     ...productData
@@ -54,11 +59,13 @@ export const actions = {
                 });
             }
         } catch (error) {
+            console.error('Error updating product:', error);
             return {
-                error
-            }
+                success: false,
+                message: 'An error occurred while saving the product',
+                details: error instanceof Error ? error.message : 'Unknown error'
+            };
         }
-
         throw redirect(304, '/products');
     },
 };

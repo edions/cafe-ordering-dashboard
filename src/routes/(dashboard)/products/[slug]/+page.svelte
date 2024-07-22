@@ -23,6 +23,7 @@
 	let status = { value: data.status, label: data.status };
 	let category = { value: data.category, label: data.category };
 	let image = data.image;
+	let imageFile: File | null = null;
 
 	let catList: any[] = [];
 
@@ -37,13 +38,14 @@
 	};
 
 	const onImageUpload = (event: Event) => {
-		const target = event.target as HTMLInputElement;
-		const file = target.files?.[0];
-
-		if (file) {
-			image  = URL.createObjectURL(file);
-		}
-	};
+        const target = event.target as HTMLInputElement;
+        const file = target.files?.[0];
+        
+        if (file) {
+            imageFile = file;
+            image = URL.createObjectURL(file);
+        }
+    };
 </script>
 
 <main
@@ -52,6 +54,11 @@
 	<div class="mx-auto grid max-w-[59rem] flex-1 auto-rows-max gap-4">
 		<form method="POST" enctype="multipart/form-data" use:enhance={() => {
 			savingInProgress = true;
+    
+			return async ({ update }) => {
+				await update();
+				savingInProgress = false;
+			};
 		}}>
 			<div class="flex items-center gap-4 pb-5">
 				<!-- <Button variant="outline" size="icon" class="h-7 w-7">
