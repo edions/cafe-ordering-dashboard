@@ -18,6 +18,13 @@
 	import { auth } from "$lib/firebase/firebase";
 	import { goto } from "$app/navigation";
 
+	const menuItems = {
+		dashboard: "/",
+		products: "/products",
+		orders: "/orders",
+		customers: "/customers"
+	};
+
 	async function logout() {
 		await signOut(auth)
 		goto("login");
@@ -28,7 +35,7 @@
 	<div class="hidden border-r bg-muted/40 md:block">
 		<div class="flex h-full max-h-screen flex-col gap-2">
 			<div class="flex h-14 items-center border-b px-4 lg:h-[60px] lg:px-6">
-				<a href="/" class="flex items-center gap-2 font-semibold">
+				<a href={menuItems.dashboard} class="flex items-center gap-2 font-semibold">
 					<Package2 class="h-6 w-6" />
 					<span class="">Cafe</span>
 				</a>
@@ -36,27 +43,27 @@
 			<div class="flex-1">
 				<nav class="grid items-start px-2 text-sm font-medium lg:px-4">
 					<a
-						href="/"
+						href={menuItems.dashboard}
 						class={`
-							${$page.url.pathname === '/' ? 'text-primary bg-muted' : ''}
+							${$page.url.pathname === menuItems.dashboard ? 'text-primary bg-muted' : ''}
 							flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary`}
 						>
 						<Home class="h-6 w-6" />
 						Dashboard
 						</a>
                     <a
-						href="/products"
+						href={menuItems.products}
 						class={`
-							${$page.route.id?.includes("products") ? 'text-primary bg-muted' : ''}
+							${$page.route.id?.includes(menuItems.products) ? 'text-primary bg-muted' : ''}
 							flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary`}
 					>
 						<Package class="h-6 w-6" />
 						Products
 					</a>
 					<a
-						href="/orders"
+						href={menuItems.orders}
 						class={`
-							${$page.route.id?.includes("orders") ? 'text-primary bg-muted' : ''}
+							${$page.route.id?.includes(menuItems.orders) ? 'text-primary bg-muted' : ''}
 							flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary`}
 					>
 						<ShoppingCart class="h-6 w-6" />
@@ -66,8 +73,10 @@
 						</Badge>
 					</a>
 					<a
-						href="##"
-						class="flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary"
+						href={menuItems.customers}
+						class={`
+							${$page.route.id?.includes(menuItems.customers) ? 'text-primary bg-muted' : ''}
+							flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary`}
 					>
 						<Users class="h-6 w-6" />
 						Customers
@@ -88,19 +97,19 @@
 				</Sheet.Trigger>
 				<Sheet.Content side="left" class="flex flex-col">
 					<nav class="grid gap-2 text-lg font-medium">
-						<a href="dashboard" class="flex items-center gap-2 text-lg font-semibold">
+						<a href={menuItems.dashboard} class="flex items-center gap-2 text-lg font-semibold">
 							<Package2 class="h-6 w-6" />
 							<span class="sr-only">Cafe</span>
 						</a>
 						<a
-							href="dashboard"
+							href={menuItems.dashboard}
 							class="mx-[-0.65rem] flex items-center gap-4 rounded-xl px-3 py-2 text-muted-foreground hover:text-foreground"
 						>
 							<Home class="h-5 w-5" />
 							Dashboard
 						</a>
 						<a
-							href="orders"
+							href={menuItems.orders}
 							class="mx-[-0.65rem] flex items-center gap-4 rounded-xl bg-muted px-3 py-2 text-foreground hover:text-foreground"
 						>
 							<ShoppingCart class="h-5 w-5" />
@@ -110,14 +119,14 @@
 							</Badge>
 						</a>
 						<a
-							href="products"
+							href={menuItems.products}
 							class="mx-[-0.65rem] flex items-center gap-4 rounded-xl px-3 py-2 text-muted-foreground hover:text-foreground"
 						>
 							<Package class="h-5 w-5" />
 							Products
 						</a>
 						<a
-							href="##"
+							href={menuItems.customers}
 							class="mx-[-0.65rem] flex items-center gap-4 rounded-xl px-3 py-2 text-muted-foreground hover:text-foreground"
 						>
 							<Users class="h-5 w-5" />
